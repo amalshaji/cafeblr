@@ -4,8 +4,8 @@
   --muted: #75695f;
   --line: #ece6e0;
   --wash: #faf8f6;
-  --copper: #b4551d;
-  --copper-deep: #8f3f0f;
+  --accent: #1e5f48;
+  --accent-deep: #14432f;
   --heart: #f91880;
   --radius-card: 18px;
   --radius-pill: 999px;
@@ -55,14 +55,9 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--copper);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-/* author styles (e.g. .card { display: flex }) override the UA's [hidden] rule */
-[hidden] {
-  display: none !important;
 }
 
 .wrap {
@@ -91,6 +86,9 @@ button {
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 620;
@@ -99,9 +97,13 @@ button {
   white-space: nowrap;
 }
 
+.wordmark img {
+  border-radius: 7px;
+}
+
 .wordmark em {
   font-style: italic;
-  color: var(--copper);
+  color: var(--accent);
 }
 
 .search {
@@ -181,38 +183,57 @@ button {
   max-width: 52ch;
 }
 
+/* dictionary-entry aside: the site's charter */
 .definition {
-  margin-top: 18px;
-  padding: 10px 16px;
-  border-left: 2px solid var(--copper);
-  background: var(--wash);
-  border-radius: 0 10px 10px 0;
-  font-family: var(--font-display);
-  font-size: 15.5px;
-  font-variation-settings: "opsz" 20, "SOFT" 60, "WONK" 0;
-  color: var(--ink);
-  max-width: 56ch;
+  margin-top: 26px;
+  padding-left: 20px;
+  border-left: 3px solid var(--accent);
+  max-width: 46ch;
+}
+
+.definition .def-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
 .definition dfn {
+  font-family: var(--font-display);
   font-style: normal;
-  font-weight: 640;
+  font-size: 19px;
+  font-weight: 680;
+  font-variation-settings: "opsz" 30, "SOFT" 70, "WONK" 1;
   letter-spacing: 0.01em;
+  color: var(--ink);
 }
 
-.definition .phonetic,
-.definition .pos {
+.definition .phonetic {
   color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.definition .pos {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-style: italic;
   font-size: 13.5px;
 }
 
-.definition .pos {
+.definition .def-body {
+  margin-top: 3px;
+  font-family: var(--font-display);
   font-style: italic;
-  margin-right: 2px;
+  font-size: 16.5px;
+  font-variation-settings: "opsz" 24, "SOFT" 70, "WONK" 0;
+  color: var(--ink);
+  line-height: 1.45;
 }
 
 .definition .def-source {
+  margin-top: 3px;
   color: var(--muted);
+  font-size: 13.5px;
 }
 
 /* ---------- chip rail ---------- */
@@ -391,11 +412,11 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: var(--copper);
+  color: var(--accent);
 }
 
 .card-actions a:hover {
-  color: var(--copper-deep);
+  color: var(--accent-deep);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -418,7 +439,7 @@ button {
 }
 
 .empty a {
-  color: var(--copper);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -442,7 +463,7 @@ button {
 }
 
 .site-footer a {
-  color: var(--copper);
+  color: var(--accent);
   font-weight: 600;
 }
 
