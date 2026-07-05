@@ -5,6 +5,9 @@ description: Add a cafe to Cafe BLR from a tweet URL — fetch the tweet, build 
 
 Add the cafe from the tweet URL in `$ARGUMENTS` to `data/cafes.json` and raise a PR.
 
+Requirements: a clone of `amalshaji/cafeblr` (clone it if not already inside one), `bun`,
+and an authenticated `gh` CLI.
+
 ## 1. Start from latest main
 
 Ids must be computed against the newest data, never a stale checkout:
