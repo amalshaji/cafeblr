@@ -66,19 +66,6 @@
   },
   {
     "id": 6,
-    "name": "Vidyarthi Bhavan",
-    "area": "Basavanagudi",
-    "knownFor": "Heritage ambience and the iconic crisp masala dose since 1943",
-    "image": "https://pbs.twimg.com/media/G00TGsuawAEeWYI.jpg",
-    "video": null,
-    "mapsUrl": "https://www.google.com/maps?cid=17113658687456513756",
-    "source": "https://x.com/VidyarthiBhavan/status/1967249625536229882",
-    "author": "@VidyarthiBhavan",
-    "likes": 2231,
-    "addedAt": "2026-07-06"
-  },
-  {
-    "id": 7,
     "name": "Taaza Thindi",
     "area": "Banashankari",
     "knownFor": "Limited menu done right — idli, vada, kharabath and masala dosa, clean and cheap",
@@ -91,20 +78,7 @@
     "addedAt": "2026-07-06"
   },
   {
-    "id": 8,
-    "name": "The Rameshwaram Cafe",
-    "area": "Bommasandra",
-    "knownFor": "Massive new outlet billed as the world's largest restaurant",
-    "image": "https://pbs.twimg.com/media/HE4TFwDagAAxS5N.jpg",
-    "video": null,
-    "mapsUrl": null,
-    "source": "https://x.com/bengalurupost1/status/2039588678364967301",
-    "author": "@bengalurupost1",
-    "likes": 174,
-    "addedAt": "2026-07-06"
-  },
-  {
-    "id": 9,
+    "id": 7,
     "name": "Truffles",
     "area": "Koramangala",
     "knownFor": "The burgers people call the best in town",
@@ -117,7 +91,7 @@
     "addedAt": "2026-07-06"
   },
   {
-    "id": 10,
+    "id": 8,
     "name": "Dyu Art Cafe",
     "area": "Koramangala",
     "knownFor": "Gorgeous restored-Kerala-home setting, perfect for a table for one",
@@ -130,7 +104,7 @@
     "addedAt": "2026-07-06"
   },
   {
-    "id": 11,
+    "id": 9,
     "name": "Karadi Coffee",
     "area": "HSR Layout",
     "knownFor": "Comfortable work-friendly spot — try the banana bread and pistachio cookie",
@@ -143,7 +117,7 @@
     "addedAt": "2026-07-06"
   },
   {
-    "id": 12,
+    "id": 10,
     "name": "Bengaluru Cafe",
     "area": "Malleshwaram",
     "knownFor": "Good food plus impressive design, architecture and orderly service",
@@ -156,7 +130,7 @@
     "addedAt": "2026-07-06"
   },
   {
-    "id": 13,
+    "id": 11,
     "name": "Naati Cafe",
     "area": "Koramangala",
     "knownFor": "Naati-style mushroom biriyani, avalakki dose and goli soda",
@@ -166,6 +140,58 @@
     "source": "https://x.com/dharmeshba/status/1534938925847891968",
     "author": "@dharmeshba",
     "likes": 89,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 12,
+    "name": "The Kind Roastery",
+    "area": "Indiranagar",
+    "knownFor": "The “it girl” place people keep going back to",
+    "image": "https://pbs.twimg.com/media/HMZrl9LawAAr7rF.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/atrangiin/status/2073462997453004910",
+    "author": "@atrangiin",
+    "likes": 307,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 13,
+    "name": "Terrabites",
+    "area": "Koramangala",
+    "knownFor": "Peaceful ambience for a quiet, unhurried breakfast",
+    "image": "https://pbs.twimg.com/media/HMYYOx_awAAOqnE.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/ritujoon2j/status/2073371331912208484",
+    "author": "@ritujoon2j",
+    "likes": 194,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 14,
+    "name": "Sri Balaji Chats Chole Kulche",
+    "area": "HSR Layout",
+    "knownFor": "The closest thing to Delhi-style chole kulche in Bengaluru",
+    "image": "https://pbs.twimg.com/media/HMcbbutbEAAhjzR.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/thepanshi_/status/2073656326522286476",
+    "author": "@thepanshi_",
+    "likes": 303,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 15,
+    "name": "Amritsari",
+    "area": "Koramangala",
+    "knownFor": "Monsoon-weather food worth a two-hour Friday lunch",
+    "image": "https://pbs.twimg.com/media/HMSchjHaUAATRuI.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/18RawatG/status/2072953872826675361",
+    "author": "@18RawatG",
+    "likes": 764,
     "addedAt": "2026-07-06"
   }
 ]
