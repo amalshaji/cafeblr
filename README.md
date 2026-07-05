@@ -15,6 +15,26 @@ a post on X that people actually loved — each card links back to the original 
 
 ## Add a cafe
 
+### With the skill (any coding agent)
+
+Install the [`add-to-cafeblr`](skills/add-to-cafeblr/SKILL.md) skill into your agent
+(Claude Code, Cursor, Codex, …):
+
+```sh
+npx skills add amalshaji/cafeblr
+```
+
+Then hand your agent a tweet link:
+
+```
+/add-to-cafeblr https://x.com/someone/status/1234567890
+```
+
+It fetches the tweet, builds the JSON entry with the next id, validates, and raises the
+PR — flagging anything it couldn't find (usually the Maps link).
+
+### By hand
+
 Open a pull request that appends one entry to `data/cafes.json`:
 
 ```json
