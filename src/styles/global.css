@@ -181,6 +181,40 @@ button {
   max-width: 52ch;
 }
 
+.definition {
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-left: 2px solid var(--copper);
+  background: var(--wash);
+  border-radius: 0 10px 10px 0;
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 20, "SOFT" 60, "WONK" 0;
+  color: var(--ink);
+  max-width: 56ch;
+}
+
+.definition dfn {
+  font-style: normal;
+  font-weight: 640;
+  letter-spacing: 0.01em;
+}
+
+.definition .phonetic,
+.definition .pos {
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.definition .pos {
+  font-style: italic;
+  margin-right: 2px;
+}
+
+.definition .def-source {
+  color: var(--muted);
+}
+
 /* ---------- chip rail ---------- */
 
 .chip-rail {
