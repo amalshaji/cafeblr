@@ -1,0 +1,129 @@
+---
+import "@fontsource-variable/fraunces";
+import "@fontsource-variable/figtree";
+import "../styles/global.css";
+import CafeCard from "../components/CafeCard.astro";
+import { cafesSchema } from "../lib/schema";
+import cafesData from "../../data/cafes.json";
+
+const GITHUB_URL = "https://github.com/amalshaji/cafeblr";
+
+const cafes = cafesSchema.parse(cafesData).sort((a, b) => b.id - a.id);
+
+const areaCounts = new Map<string, number>();
+for (const cafe of cafes) {
+  areaCounts.set(cafe.area, (areaCounts.get(cafe.area) ?? 0) + 1);
+}
+const areas = [...areaCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+const description =
+  "Nice cafes in Bengaluru, found by the internet. Every spot comes from a post people actually loved — with directions and a link to the receipts.";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Cafe BLR — nice cafes in Bengaluru, found by the internet</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content="Cafe BLR" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a href="/" class="wordmark">Cafe <em>BLR</em></a>
+        <label class="search">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <circle cx="7" cy="7" r="5"></circle>
+            <path d="M11 11l3.5 3.5"></path>
+          </svg>
+          <input
+            id="search"
+            type="search"
+            placeholder="Search cafes, areas, vibes…"
+            autocomplete="off"
+            aria-label="Search cafes"
+          />
+        </label>
+        <a class="add-link" href={GITHUB_URL} target="_blank" rel="noopener">+ Add a cafe</a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <h1>Nice cafes in Bengaluru, found by the internet.</h1>
+        <p>
+          Every spot here comes from a post people actually loved. Tap the heart for the
+          receipts, or get directions and go.
+        </p>
+      </section>
+
+      <nav class="chip-rail" aria-label="Filter by area">
+        <button class="chip" data-area="" aria-pressed="true">
+          All <span class="n">{cafes.length}</span>
+        </button>
+        {
+          areas.map(([area, count]) => (
+            <button class="chip" data-area={area} aria-pressed="false">
+              {area} <span class="n">{count}</span>
+            </button>
+          ))
+        }
+      </nav>
+
+      <section class="grid" id="grid" aria-live="polite">
+        {cafes.map((cafe, i) => <CafeCard cafe={cafe} index={i} />)}
+      </section>
+
+      <div class="empty" id="empty" hidden>
+        <strong>No cafes match that.</strong>
+        Know a spot the internet loves? <a href={GITHUB_URL} target="_blank" rel="noopener">Add it via a pull request</a>.
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>
+          Every cafe here earned its spot — sourced from posts Bengaluru loved. Add one via a
+          <a href={GITHUB_URL} target="_blank" rel="noopener">pull request</a>.
+        </span>
+        <span>Photos belong to their posters on X. Each card links to the original post.</span>
+      </div>
+    </footer>
+
+    <script>
+      const input = document.getElementById("search") as HTMLInputElement;
+      const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
+      const cards = [...document.querySelectorAll<HTMLElement>(".card")];
+      const empty = document.getElementById("empty")!;
+      let activeArea = "";
+
+      function apply() {
+        const q = input.value.trim().toLowerCase();
+        let visible = 0;
+        for (const card of cards) {
+          const match =
+            (!q || card.dataset.search!.includes(q)) &&
+            (!activeArea || card.dataset.area === activeArea);
+          card.hidden = !match;
+          if (match) visible++;
+        }
+        empty.hidden = visible !== 0 || cards.length === 0;
+      }
+
+      input.addEventListener("input", apply);
+
+      for (const chip of chips) {
+        chip.addEventListener("click", () => {
+          activeArea = chip.dataset.area ?? "";
+          for (const c of chips) c.setAttribute("aria-pressed", String(c === chip));
+          apply();
+        });
+      }
+    </script>
+  </body>
+</html>

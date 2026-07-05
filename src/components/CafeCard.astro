@@ -1,0 +1,78 @@
+---
+import { directionsUrl, type Cafe } from "../lib/schema";
+
+interface Props {
+  cafe: Cafe;
+  index: number;
+}
+
+const { cafe, index } = Astro.props;
+
+function formatLikes(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "")}k`;
+  return String(n);
+}
+
+// pbs.twimg.com supports size variants via ?name=; use a smaller one for the grid.
+const gridImage = cafe.image.includes("?") ? cafe.image : `${cafe.image}?name=medium`;
+const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor}`.toLowerCase();
+---
+
+<article
+  class="card"
+  data-area={cafe.area}
+  data-search={searchText}
+  style={`--i: ${index}`}
+>
+  <a
+    class="card-media"
+    href={cafe.source}
+    target="_blank"
+    rel="noopener"
+    aria-label={`Post about ${cafe.name} on X`}
+  >
+    {
+      cafe.video ? (
+        <video src={cafe.video} poster={gridImage} muted playsinline loop preload="none" />
+      ) : (
+        <img
+          src={gridImage}
+          alt={`${cafe.name}, ${cafe.area}`}
+          loading={index < 4 ? "eager" : "lazy"}
+          decoding="async"
+          referrerpolicy="no-referrer"
+        />
+      )
+    }
+    <span class="likes-pill" title={`${cafe.likes.toLocaleString()} likes on X`}>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path
+          d="M12 21s-7.5-4.7-10-9.3C.3 8.6 2.2 4.5 6 4.5c2.2 0 3.6 1.2 4.4 2.5.4.6 1.2.6 1.6 0 .8-1.3 2.2-2.5 4.4-2.5 3.8 0 5.7 4.1 4 7.2C19.5 16.3 12 21 12 21z"
+        ></path>
+      </svg>
+      {formatLikes(cafe.likes)}
+    </span>
+  </a>
+
+  <div class="card-body">
+    <div class="card-title-row">
+      <h2 class="card-name">{cafe.name}</h2>
+      <span class="card-area">{cafe.area}</span>
+    </div>
+    <p class="card-known">{cafe.knownFor}</p>
+    <div class="card-actions">
+      <a href={cafe.source} target="_blank" rel="noopener">
+        {cafe.author} on X
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M3 9L9 3M4 3h5v5"></path>
+        </svg>
+      </a>
+      <a href={directionsUrl(cafe)} target="_blank" rel="noopener">
+        Directions
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M3 9L9 3M4 3h5v5"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
