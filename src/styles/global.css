@@ -250,6 +250,48 @@ button {
   display: block;
 }
 
+.preview-badge {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-width: calc(100vw - 36px);
+  padding: 10px 14px;
+  border: 1px solid #e7b341;
+  border-radius: var(--radius-pill);
+  color: #241608;
+  background: #ffd978;
+  box-shadow: 0 8px 24px rgba(32, 25, 20, 0.16);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.preview-badge span {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.preview-badge strong {
+  min-width: 0;
+  max-width: min(42vw, 320px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .preview-badge {
+  border-color: #c9953a;
+  color: #170f07;
+  background: #f2bf57;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+}
+
 /* ---------- intro ---------- */
 
 .intro {
@@ -722,6 +764,18 @@ button {
   .theme-toggle {
     width: 38px;
     height: 38px;
+  }
+
+  .preview-badge {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    justify-content: center;
+    max-width: none;
+  }
+
+  .preview-badge strong {
+    max-width: 48vw;
   }
 
   .intro {
