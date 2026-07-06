@@ -36,6 +36,8 @@ console.log(JSON.stringify({
 
 - **Tweet missing or deleted** (adapter returns null).
 - **No photo** — every entry needs an image; a text-only tweet cannot be added.
+  When multiple tweet media items exist, inspect them and prefer a food/drink
+  photo first; if none show food or drink, use the best available tweet image.
 - **Duplicate** — the source URL (or the same cafe) is already in `data/cafes.json`.
 - **Sourcing policy** — the author must be a real person sharing a find. Reject brand
   accounts, the cafe's own account, news aggregators, and marketing handles.
@@ -48,8 +50,10 @@ console.log(JSON.stringify({
   ("Indiranagar", "HSR Layout"), not an address.
 - `knownFor` — one line paraphrasing what the post itself praises. Never invent
   qualities the tweet doesn't mention.
-- `image` — first photo `media_url_https` (or the video's poster). `video` — best-bitrate
-  mp4 URL if the media is a video, else `null`.
+- `image` — inspect the tweet media and choose a photo that clearly shows the
+  food/drink item first. If no media shows food or drink, use the best available
+  tweet photo (or the video's poster). `video` — best-bitrate mp4 URL if the
+  media is a video, else `null`.
 - `mapsUrl` — Google Maps link if the tweet/thread contains one (check
   `entities.urls[].expanded_url`), else `null`.
 - `source` — canonical `https://x.com/<user>/status/<id>`. `author` — `@<user>`.

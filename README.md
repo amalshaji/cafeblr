@@ -65,7 +65,9 @@ Rules (CI enforces them):
 
 - `id` — next integer (`max + 1`), entries stay in id order.
 - `source` — the X post the cafe was found in; must be unique across the file.
-- `image` — the post's photo (`pbs.twimg.com` URL). `video` — optional mp4 URL.
+- `image` — the post's photo (`pbs.twimg.com` URL). If the post has multiple
+  media items, inspect them and prefer a food/drink image first; if none show
+  food or drink, use the best available tweet image. `video` — optional mp4 URL.
 - `mapsUrl` — optional Google Maps link; when `null` the site generates a
   directions search from name + area.
 - `likes` — the post's like count when you added it.
