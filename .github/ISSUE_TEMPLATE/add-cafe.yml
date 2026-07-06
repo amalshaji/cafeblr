@@ -1,0 +1,19 @@
+name: Suggest a cafe
+description: Paste one X/Twitter post URL. We'll review it and add the cafe if it fits Cafe BLR.
+title: "Cafe submission: "
+labels: ["cafe-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping Cafe BLR grow. Paste one X/Twitter status URL below.
+
+        We'll review the post, fetch the media/metadata, and add the cafe if it fits the directory rules.
+  - type: input
+    id: tweet_url
+    attributes:
+      label: X/Twitter post URL
+      description: Use the original status URL for the cafe recommendation.
+      placeholder: https://x.com/someone/status/1234567890
+    validations:
+      required: true
