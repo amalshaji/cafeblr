@@ -268,11 +268,7 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
               Number(b.dataset.id) - Number(a.dataset.id),
           );
         } else {
-          ordered.sort(
-            (a, b) =>
-              Number(b.dataset.postedAt) - Number(a.dataset.postedAt) ||
-              Number(b.dataset.id) - Number(a.dataset.id),
-          );
+          ordered.sort((a, b) => Number(a.dataset.newestRank) - Number(b.dataset.newestRank));
         }
         for (const card of ordered) grid.append(card);
       }

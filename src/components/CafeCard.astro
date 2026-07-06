@@ -26,7 +26,7 @@ const googleRatingLabel = googleRating ? `Google rating: ${googleRating} stars` 
   data-area={cafe.area}
   data-likes={cafe.likes}
   data-google-rating={cafe.googleRating ?? -1}
-  data-posted-at={Date.parse(cafe.postedAt)}
+  data-newest-rank={index}
   data-search={searchText}
   style={`--i: ${index}`}
 >
