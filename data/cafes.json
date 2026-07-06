@@ -68,14 +68,14 @@
     "id": 6,
     "name": "Taaza Thindi",
     "area": "Banashankari",
-    "knownFor": "Limited menu done right — idli, vada, kharabath and masala dosa, clean and cheap",
-    "image": "https://pbs.twimg.com/media/GUtIaGDXgAAjD1t.jpg",
+    "knownFor": "The kind of breakfast worth waking up early for",
+    "image": "https://pbs.twimg.com/media/HKGb70zagAAIyX1.jpg",
     "video": null,
     "mapsUrl": null,
-    "source": "https://x.com/VishweshwarBhat/status/1822630100661088423",
-    "author": "@VishweshwarBhat",
-    "likes": 265,
-    "addedAt": "2026-07-06"
+    "source": "https://x.com/arpita_pradhan_/status/2063101567096811736",
+    "author": "@arpita_pradhan_",
+    "likes": 562,
+    "addedAt": "2026-07-07"
   },
   {
     "id": 7,
@@ -453,5 +453,31 @@
     "author": "@niketrajdwivedi",
     "likes": 98,
     "addedAt": "2026-07-06"
+  },
+  {
+    "id": 36,
+    "name": "Ela Matcha",
+    "area": "Indiranagar",
+    "knownFor": "Matcha that left a lasting impression",
+    "image": "https://pbs.twimg.com/media/HK3JcLsbkAAYK0K.jpg",
+    "video": "https://video.twimg.com/amplify_video/2066529290322345984/vid/avc1/1080x1920/q7Gks58iwmXyEIZv.mp4",
+    "mapsUrl": null,
+    "source": "https://x.com/arpita_pradhan_/status/2066529381728829817",
+    "author": "@arpita_pradhan_",
+    "likes": 404,
+    "addedAt": "2026-07-07"
+  },
+  {
+    "id": 37,
+    "name": "Molly's Courtyard",
+    "area": "Cunningham Road",
+    "knownFor": "A beautiful cafe setting that makes the place itself the draw",
+    "image": "https://pbs.twimg.com/media/HKtNan4bIAAeGoZ.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/arpita_pradhan_/status/2065829985387229269",
+    "author": "@arpita_pradhan_",
+    "likes": 249,
+    "addedAt": "2026-07-07"
   }
 ]
