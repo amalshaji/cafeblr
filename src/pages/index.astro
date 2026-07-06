@@ -4,6 +4,7 @@ import "@fontsource-variable/figtree";
 import "../styles/global.css";
 import CafeCard from "../components/CafeCard.astro";
 import { cafesSchema } from "../lib/schema";
+import { SEO, structuredDataJson } from "../lib/seo";
 import cafesData from "../../data/cafes.json";
 
 const GITHUB_URL = "https://github.com/amalshaji/cafeblr";
@@ -15,9 +16,6 @@ for (const cafe of cafes) {
   areaCounts.set(cafe.area, (areaCounts.get(cafe.area) ?? 0) + 1);
 }
 const areas = [...areaCounts.entries()].sort((a, b) => b[1] - a[1]);
-
-const description =
-  "Nice cafes in Bengaluru, found by the internet. Every spot comes from a post people actually loved — with directions and a link to the receipts.";
 ---
 
 <html lang="en">
@@ -26,11 +24,27 @@ const description =
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>Cafe BLR — nice cafes in Bengaluru, found by the internet</title>
-    <meta name="description" content={description} />
-    <meta property="og:title" content="Cafe BLR" />
-    <meta property="og:description" content={description} />
+    <meta name="theme-color" content={SEO.themeColor} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={SEO.canonicalUrl} />
+    <title>{SEO.title}</title>
+    <meta name="description" content={SEO.description} />
+    <meta property="og:site_name" content={SEO.siteName} />
+    <meta property="og:title" content={SEO.title} />
+    <meta property="og:description" content={SEO.description} />
+    <meta property="og:url" content={SEO.canonicalUrl} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content={SEO.locale} />
+    <meta property="og:image" content={SEO.ogImageUrl} />
+    <meta property="og:image:width" content={String(SEO.ogImageWidth)} />
+    <meta property="og:image:height" content={String(SEO.ogImageHeight)} />
+    <meta property="og:image:alt" content={SEO.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={SEO.title} />
+    <meta name="twitter:description" content={SEO.description} />
+    <meta name="twitter:image" content={SEO.ogImageUrl} />
+    <meta name="twitter:image:alt" content={SEO.ogImageAlt} />
+    <script type="application/ld+json" set:html={structuredDataJson}></script>
   </head>
   <body>
     <header class="site-header">
