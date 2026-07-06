@@ -24,6 +24,7 @@ function fail(errors: string[]): never {
 }
 
 const errors: string[] = [];
+const warnings: string[] = [];
 
 let parsed: unknown;
 try {
@@ -47,6 +48,8 @@ cafes.forEach((cafe, index) => {
 });
 
 const sources = new Map<string, number>();
+const cafeNames = new Map<string, number>();
+const genericKnownFor = new Set(["coffee", "good coffee", "great coffee", "nice cafe", "good food", "great food"]);
 for (const cafe of cafes) {
   const canonical = cafe.source.replace("//twitter.com/", "//x.com/");
   const existing = sources.get(canonical);
@@ -55,9 +58,22 @@ for (const cafe of cafes) {
   } else {
     sources.set(canonical, cafe.id);
   }
+
+  const nameKey = `${cafe.name.trim().toLowerCase()}|${cafe.area.trim().toLowerCase()}`;
+  const duplicateCafeId = cafeNames.get(nameKey);
+  if (duplicateCafeId !== undefined) {
+    errors.push(`duplicate cafe name + area: "${cafe.name}" in ${cafe.area} (ids ${duplicateCafeId} and ${cafe.id})`);
+  } else {
+    cafeNames.set(nameKey, cafe.id);
+  }
+
+  if (genericKnownFor.has(cafe.knownFor.trim().toLowerCase())) {
+    warnings.push(`id ${cafe.id} ("${cafe.name}"): knownFor is very generic`);
+  }
 }
 
 if (errors.length > 0) fail(errors);
+for (const warning of warnings) console.warn(`! ${warning}`);
 
 // --- live checks -----------------------------------------------------------
 

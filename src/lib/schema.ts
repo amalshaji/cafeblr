@@ -2,15 +2,28 @@ import { z } from "zod";
 
 const httpsUrl = z.url({ protocol: /^https$/ });
 
+const googleMapsHosts = new Set([
+  "google.com",
+  "www.google.com",
+  "maps.google.com",
+  "maps.app.goo.gl",
+]);
+
 export const cafeSchema = z
   .object({
     id: z.number().int().positive(),
-    name: z.string().min(1),
-    area: z.string().min(1),
-    knownFor: z.string().min(1),
-    image: httpsUrl,
+    name: z.string().trim().min(1),
+    area: z.string().trim().min(1),
+    knownFor: z.string().trim().min(8).max(140),
+    image: httpsUrl.refine((url) => new URL(url).hostname === "pbs.twimg.com", {
+      message: "must be a pbs.twimg.com image URL",
+    }),
     video: httpsUrl.nullable(),
-    mapsUrl: httpsUrl.nullable(),
+    mapsUrl: httpsUrl
+      .refine((url) => googleMapsHosts.has(new URL(url).hostname), {
+        message: "must be a Google Maps URL",
+      })
+      .nullable(),
     source: z
       .string()
       .regex(
