@@ -56,7 +56,9 @@ console.log(JSON.stringify({
   media is a video, else `null`.
 - `mapsUrl` — Google Maps link if the tweet/thread contains one (check
   `entities.urls[].expanded_url`), else `null`.
+- `googleRating` — Google Maps rating for the exact place if verified, else `null`.
 - `source` — canonical `https://x.com/<user>/status/<id>`. `author` — `@<user>`.
+- `postedAt` — the tweet page `datePublished` ISO timestamp. Use the browser-rendered X page metadata, not a guessed date.
 - `likes` — `favorite_count` from the fetch. `addedAt` — today, `YYYY-MM-DD`.
 - `id` — `max + 1` over the file from step 1; entries stay in id order (schema and rules:
   `src/lib/schema.ts`, README "Add a cafe").

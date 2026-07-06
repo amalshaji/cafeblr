@@ -3,7 +3,9 @@ import { cafesSchema, type Cafe } from "./schema";
 
 export const cafes = cafesSchema.parse(cafesData);
 
-export const cafesByNewest = [...cafes].sort((a, b) => b.id - a.id);
+export const cafesByNewest = [...cafes].sort(
+  (a, b) => Date.parse(b.postedAt) - Date.parse(a.postedAt) || b.id - a.id,
+);
 
 export const areasByPopularity = countAreas(cafes);
 
