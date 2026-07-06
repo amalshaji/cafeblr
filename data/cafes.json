@@ -193,5 +193,31 @@
     "author": "@18RawatG",
     "likes": 764,
     "addedAt": "2026-07-06"
+  },
+  {
+    "id": 16,
+    "name": "Roastea",
+    "area": "Koramangala",
+    "knownFor": "Amazing food and polite, well-mannered staff — a place where everything just feels right",
+    "image": "https://pbs.twimg.com/media/HLeBG-NbEAAhO03.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/place/Roastea+-+Curated+Coffee+And+Tea+Artisans/@12.9358255,77.6281926,1708m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3bae151e37e07cab:0x264357186378c5f!8m2!3d12.9358255!4d77.6281926!16s%2Fg%2F11vx65y9c0",
+    "source": "https://x.com/adnaanasir/status/2069264535261982856",
+    "author": "@adnaanasir",
+    "likes": 49,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 17,
+    "name": "Tan Coffee",
+    "area": "Koramangala",
+    "knownFor": "The new café everyone's gatekeeping — good enough to work from for days",
+    "image": "https://pbs.twimg.com/media/HK7u8kobUAAyw2O.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/place/TAN+COFFEE+%7C+Koramangala+%7C+Bengaluru/@12.9328153,77.6312854,1708m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3bae15e913734b83:0x265c2959790b80d6!8m2!3d12.9328153!4d77.6312854!16s%2Fg%2F11z8j6mhnt",
+    "source": "https://x.com/probablyaayushi/status/2066852023375663402",
+    "author": "@probablyaayushi",
+    "likes": 779,
+    "addedAt": "2026-07-06"
   }
 ]
