@@ -427,5 +427,31 @@
     "author": "@bhelpuriman",
     "likes": 35,
     "addedAt": "2026-07-06"
+  },
+  {
+    "id": 34,
+    "name": "Mahesh Lunch House",
+    "area": "Indiranagar",
+    "knownFor": "Good food, solid staff and comfortable ambience in Indiranagar",
+    "image": "https://pbs.twimg.com/media/HL9mGtBagAABCY0.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/niketrajdwivedi/status/2071486734609928287",
+    "author": "@niketrajdwivedi",
+    "likes": 56,
+    "addedAt": "2026-07-06"
+  },
+  {
+    "id": 35,
+    "name": "Pandit Ji",
+    "area": "Indiranagar",
+    "knownFor": "Affordable North Indian spot in Indiranagar with decent food and staff",
+    "image": "https://pbs.twimg.com/media/HMh6YcTa8AAYKmW.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/niketrajdwivedi/status/2074042196911886371",
+    "author": "@niketrajdwivedi",
+    "likes": 98,
+    "addedAt": "2026-07-06"
   }
 ]
