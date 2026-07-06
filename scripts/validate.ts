@@ -5,7 +5,7 @@
  * source tweet URLs are unique.
  *
  * Live checks (source tweet still exists, image URL loads) run only for
- * entries that are new or modified relative to $BASE_REF (set in CI on PRs),
+ * entries whose source/media are new or modified relative to $BASE_REF (set in CI on PRs),
  * so a deleted tweet from an old entry never breaks the build.
  * Pass --live to force live checks on every entry.
  */
@@ -97,6 +97,16 @@ for (const warning of warnings) console.warn(`! ${warning}`);
 
 // --- live checks -----------------------------------------------------------
 
+function liveCheckKey(entry: { source?: unknown; image?: unknown; video?: unknown }): string | null {
+  if (typeof entry.source !== "string" || typeof entry.image !== "string") return null;
+  if (entry.video !== null && typeof entry.video !== "string") return null;
+  return JSON.stringify({
+    source: sourceKey(entry.source),
+    image: entry.image,
+    video: entry.video,
+  });
+}
+
 function entriesToLiveCheck(): Cafe[] {
   if (process.argv.includes("--live")) return cafes;
   const baseRef = process.env.BASE_REF;
@@ -106,13 +116,18 @@ function entriesToLiveCheck(): Cafe[] {
     const baseRaw = execFileSync("git", ["show", `${baseRef}:${DATA_PATH}`], {
       encoding: "utf8",
     });
-    const baseResult = cafesSchema.safeParse(JSON.parse(baseRaw));
-    if (!baseResult.success) return cafes;
-    baseById = new Map(baseResult.data.map((c) => [c.id, JSON.stringify(c)]));
+    const baseData = JSON.parse(baseRaw);
+    if (!Array.isArray(baseData)) return cafes;
+    for (const entry of baseData) {
+      if (!entry || typeof entry !== "object") continue;
+      const id = (entry as { id?: unknown }).id;
+      const key = liveCheckKey(entry as { source?: unknown; image?: unknown; video?: unknown });
+      if (typeof id === "number" && key) baseById.set(id, key);
+    }
   } catch {
     // data file doesn't exist on the base branch — treat every entry as new
   }
-  return cafes.filter((c) => baseById.get(c.id) !== JSON.stringify(c));
+  return cafes.filter((c) => baseById.get(c.id) !== liveCheckKey(c));
 }
 
 async function checkTweet(cafe: Cafe): Promise<string | null> {

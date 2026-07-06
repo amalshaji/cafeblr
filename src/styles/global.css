@@ -546,6 +546,25 @@ button {
   color: var(--muted);
 }
 
+.google-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.google-rating svg {
+  color: #f5a623;
+}
+
+.google-rating strong {
+  color: var(--ink);
+  font-weight: 750;
+}
+
 .card-known {
   color: var(--muted);
   font-size: 14.5px;
@@ -558,16 +577,26 @@ button {
 .card-actions {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 14px;
   margin-top: 7px;
   font-size: 13.5px;
   font-weight: 600;
 }
 
+.card-credit {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .card-actions a {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  flex-shrink: 0;
   color: var(--accent);
 }
 

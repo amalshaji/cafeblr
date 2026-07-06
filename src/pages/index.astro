@@ -11,6 +11,7 @@ const ADD_CAFE_URL = `${GITHUB_URL}/issues/new?template=add-cafe.yml`;
 
 const cafes = cafesByNewest;
 const areas = areasByPopularity;
+const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
 ---
 
 <html lang="en">
@@ -136,8 +137,7 @@ const areas = areasByPopularity;
               <select id="sort">
                 <option value="newest">Newest</option>
                 <option value="liked">Most liked</option>
-                <option value="area">Area</option>
-                <option value="random">Random</option>
+                {hasGoogleRatings && <option value="rated">Top rated</option>}
               </select>
             </label>
             <button class="clear-filters" id="clear-filters" type="button" hidden>Clear filters</button>
@@ -261,14 +261,12 @@ const areas = areasByPopularity;
         const ordered = [...cards];
         if (sort.value === "liked") {
           ordered.sort((a, b) => Number(b.dataset.likes) - Number(a.dataset.likes));
-        } else if (sort.value === "area") {
+        } else if (sort.value === "rated") {
           ordered.sort(
             (a, b) =>
-              a.dataset.area!.localeCompare(b.dataset.area!) ||
+              Number(b.dataset.googleRating) - Number(a.dataset.googleRating) ||
               Number(b.dataset.id) - Number(a.dataset.id),
           );
-        } else if (sort.value === "random") {
-          ordered.sort(() => Math.random() - 0.5);
         } else {
           ordered.sort((a, b) => Number(b.dataset.id) - Number(a.dataset.id));
         }
