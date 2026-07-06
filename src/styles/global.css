@@ -210,18 +210,40 @@ button {
   background: var(--wash);
 }
 
-.theme-switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
   color: var(--muted);
-  font-size: 13.5px;
-  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.theme-switcher select {
-  min-width: 96px;
+.theme-toggle:hover {
+  background: var(--wash);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.theme-icon {
+  display: none;
+}
+
+.icon-auto {
+  display: block;
+}
+
+:root[data-theme-mode] .icon-auto {
+  display: none;
+}
+
+:root[data-theme-mode="auto"] .icon-auto,
+:root[data-theme-mode="light"] .icon-light,
+:root[data-theme-mode="dark"] .icon-dark {
+  display: block;
 }
 
 /* ---------- intro ---------- */
@@ -376,8 +398,7 @@ button {
   font-weight: 600;
 }
 
-.sort-tools select,
-.theme-switcher select {
+.sort-tools select {
   appearance: none;
   font: inherit;
   color: var(--ink);
@@ -625,14 +646,6 @@ button {
 
   .add-link {
     margin-left: auto;
-  }
-
-  .theme-switcher span {
-    display: none;
-  }
-
-  .theme-switcher select {
-    min-width: 88px;
   }
 
   .intro {

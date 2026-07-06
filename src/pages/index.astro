@@ -81,14 +81,19 @@ const areas = areasByPopularity;
             aria-label="Search cafes"
           />
         </label>
-        <label class="theme-switcher">
-          <span>Theme</span>
-          <select id="theme" aria-label="Theme">
-            <option value="auto">Auto</option>
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
-        </label>
+        <button class="theme-toggle" id="theme" type="button" aria-label="Theme: Auto" title="Theme: Auto">
+          <svg class="theme-icon icon-auto" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <rect x="2.5" y="3" width="11" height="8" rx="1.5"></rect>
+            <path d="M6 13h4M8 11v2"></path>
+          </svg>
+          <svg class="theme-icon icon-light" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <circle cx="8" cy="8" r="3"></circle>
+            <path d="M8 1.8v1.4M8 12.8v1.4M3.6 3.6l1 1M11.4 11.4l1 1M1.8 8h1.4M12.8 8h1.4M3.6 12.4l1-1M11.4 4.6l1-1"></path>
+          </svg>
+          <svg class="theme-icon icon-dark" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M13.2 10.2A5.4 5.4 0 0 1 5.8 2.8a5.6 5.6 0 1 0 7.4 7.4Z"></path>
+          </svg>
+        </button>
         <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener">+ Add a cafe</a>
       </div>
     </header>
@@ -164,7 +169,7 @@ const areas = areasByPopularity;
     <script>
       const input = document.getElementById("search") as HTMLInputElement;
       const sort = document.getElementById("sort") as HTMLSelectElement;
-      const theme = document.getElementById("theme") as HTMLSelectElement;
+      const theme = document.getElementById("theme") as HTMLButtonElement;
       const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
       const grid = document.getElementById("grid")!;
       const cards = [...document.querySelectorAll<HTMLElement>(".card")];
@@ -175,41 +180,51 @@ const areas = areasByPopularity;
 
       const THEME_KEY = "cafeblr-theme";
       const THEME_COLORS = { light: "#ffffff", dark: "#15110e" };
+      const THEME_MODES = ["auto", "light", "dark"] as const;
+      const THEME_LABELS = { auto: "Auto", light: "Light", dark: "Dark" };
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
-      const validThemes = new Set(["light", "dark", "auto"]);
       const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      type ThemeMode = (typeof THEME_MODES)[number];
 
-      function selectedTheme(): string {
+      function isThemeMode(value: string | null | undefined): value is ThemeMode {
+        return value === "auto" || value === "light" || value === "dark";
+      }
+
+      function selectedTheme(): ThemeMode {
         const mode = document.documentElement.dataset.themeMode;
-        if (mode && validThemes.has(mode)) return mode;
+        if (isThemeMode(mode)) return mode;
         try {
           const stored = localStorage.getItem(THEME_KEY);
-          return stored && validThemes.has(stored) ? stored : "auto";
+          return isThemeMode(stored) ? stored : "auto";
         } catch {
           return "auto";
         }
       }
 
-      function resolvedTheme(mode: string): "light" | "dark" {
+      function resolvedTheme(mode: ThemeMode): "light" | "dark" {
         return mode === "dark" || (mode === "auto" && systemTheme.matches) ? "dark" : "light";
       }
 
-      function applyTheme(mode: string) {
+      function applyTheme(mode: ThemeMode) {
         const resolved = resolvedTheme(mode);
         document.documentElement.dataset.themeMode = mode;
         document.documentElement.dataset.theme = resolved;
         document.documentElement.style.colorScheme = resolved;
+        const label = `Theme: ${THEME_LABELS[mode]}`;
+        theme.setAttribute("aria-label", label);
+        theme.title = label;
         if (themeColor) themeColor.content = THEME_COLORS[resolved];
       }
 
-      theme.value = selectedTheme();
-      applyTheme(theme.value);
+      applyTheme(selectedTheme());
 
-      theme.addEventListener("change", () => {
+      theme.addEventListener("click", () => {
+        const current = selectedTheme();
+        const next = THEME_MODES[(THEME_MODES.indexOf(current) + 1) % THEME_MODES.length];
         try {
-          localStorage.setItem(THEME_KEY, theme.value);
+          localStorage.setItem(THEME_KEY, next);
         } catch {}
-        applyTheme(theme.value);
+        applyTheme(next);
       });
 
       systemTheme.addEventListener("change", () => {
