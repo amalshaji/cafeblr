@@ -1,21 +1,15 @@
 ---
 import "@fontsource-variable/fraunces";
 import "@fontsource-variable/figtree";
-import "../styles/global.css";
-import CafeCard from "../components/CafeCard.astro";
-import { cafesSchema } from "../lib/schema";
-import { SEO, structuredDataJson } from "../lib/seo";
-import cafesData from "../../data/cafes.json";
+import "@/src/styles/global.css";
+import CafeCard from "@/src/components/CafeCard.astro";
+import { areasByPopularity, cafesByNewest } from "@/src/lib/cafes";
+import { SEO, structuredDataJson } from "@/src/lib/seo";
 
 const GITHUB_URL = "https://github.com/amalshaji/cafeblr";
 
-const cafes = cafesSchema.parse(cafesData).sort((a, b) => b.id - a.id);
-
-const areaCounts = new Map<string, number>();
-for (const cafe of cafes) {
-  areaCounts.set(cafe.area, (areaCounts.get(cafe.area) ?? 0) + 1);
-}
-const areas = [...areaCounts.entries()].sort((a, b) => b[1] - a[1]);
+const cafes = cafesByNewest;
+const areas = areasByPopularity;
 ---
 
 <html lang="en">

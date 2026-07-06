@@ -9,9 +9,11 @@
  * so a deleted tweet from an old entry never breaks the build.
  * Pass --live to force live checks on every entry.
  */
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { cafesSchema, type Cafe } from "../src/lib/schema";
+import { cafesSchema, type Cafe } from "@/src/lib/schema";
+import { tweetIdFromSource } from "./lib/schema";
+import { fetchTweet } from "./lib/tweet";
 
 const DATA_PATH = "data/cafes.json";
 
@@ -65,28 +67,25 @@ function entriesToLiveCheck(): Cafe[] {
   if (!baseRef) return [];
   let baseById = new Map<number, string>();
   try {
-    const baseRaw = execSync(`git show ${baseRef}:${DATA_PATH}`, { encoding: "utf8" });
-    baseById = new Map(
-      (JSON.parse(baseRaw) as Cafe[]).map((c) => [c.id, JSON.stringify(c)]),
-    );
+    const baseRaw = execFileSync("git", ["show", `${baseRef}:${DATA_PATH}`], {
+      encoding: "utf8",
+    });
+    const baseResult = cafesSchema.safeParse(JSON.parse(baseRaw));
+    if (!baseResult.success) return cafes;
+    baseById = new Map(baseResult.data.map((c) => [c.id, JSON.stringify(c)]));
   } catch {
     // data file doesn't exist on the base branch — treat every entry as new
   }
   return cafes.filter((c) => baseById.get(c.id) !== JSON.stringify(c));
 }
 
-function syndicationToken(id: string): string {
-  return ((Number(id) / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, "");
-}
-
 async function checkTweet(cafe: Cafe): Promise<string | null> {
-  const id = cafe.source.match(/status\/(\d+)$/)![1];
-  const url = `https://cdn.syndication.twimg.com/tweet-result?id=${id}&token=${syndicationToken(id)}`;
-  const res = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 (compatible; CafeBLR)" } });
-  if (!res.ok) return `source tweet returned ${res.status}`;
-  const data = (await res.json().catch(() => null)) as { __typename?: string } | null;
-  if (!data || data.__typename === "TweetTombstone") return "source tweet is unavailable";
-  return null;
+  try {
+    const tweet = await fetchTweet(tweetIdFromSource(cafe.source));
+    return tweet ? null : "source tweet is unavailable";
+  } catch (error) {
+    return error instanceof Error ? error.message : "source tweet check failed";
+  }
 }
 
 async function checkImage(url: string): Promise<string | null> {
