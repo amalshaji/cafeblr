@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 const httpsUrl = z.url({ protocol: /^https$/ });
+const cleanString = z.string().refine((value) => value.trim() === value, {
+  message: "must not have leading or trailing whitespace",
+});
 
 const googleMapsHosts = new Set([
   "google.com",
@@ -12,9 +15,9 @@ const googleMapsHosts = new Set([
 export const cafeSchema = z
   .object({
     id: z.number().int().positive(),
-    name: z.string().trim().min(1),
-    area: z.string().trim().min(1),
-    knownFor: z.string().trim().min(8).max(140),
+    name: cleanString.min(1),
+    area: cleanString.min(1),
+    knownFor: cleanString.min(8).max(140),
     image: httpsUrl.refine((url) => new URL(url).hostname === "pbs.twimg.com", {
       message: "must be a pbs.twimg.com image URL",
     }),

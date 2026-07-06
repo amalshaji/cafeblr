@@ -146,11 +146,15 @@ const areas = areasByPopularity;
       const clearFilters = document.getElementById("clear-filters") as HTMLButtonElement;
       let activeArea = "";
 
+      const validAreas = new Set(chips.map((chip) => chip.dataset.area ?? ""));
+      const validSorts = new Set([...sort.options].map((option) => option.value));
       const params = new URLSearchParams(window.location.search);
+      const areaParam = params.get("area") ?? "";
+      const sortParam = params.get("sort") ?? "newest";
+
       input.value = params.get("q") ?? "";
-      activeArea = params.get("area") ?? "";
-      sort.value = params.get("sort") ?? "newest";
-      if (![...sort.options].some((o) => o.value === sort.value)) sort.value = "newest";
+      activeArea = validAreas.has(areaParam) ? areaParam : "";
+      sort.value = validSorts.has(sortParam) ? sortParam : "newest";
 
       function syncChips() {
         for (const chip of chips) {
@@ -186,19 +190,33 @@ const areas = areasByPopularity;
         for (const card of ordered) grid.append(card);
       }
 
-      function apply() {
-        const q = input.value.trim().toLowerCase();
+      function cardMatches(card: HTMLElement, query: string): boolean {
+        return (
+          (!query || card.dataset.search!.includes(query)) &&
+          (!activeArea || card.dataset.area === activeArea)
+        );
+      }
+
+      function renderCards(query: string): number {
         let visible = 0;
         for (const card of cards) {
-          const match =
-            (!q || card.dataset.search!.includes(q)) &&
-            (!activeArea || card.dataset.area === activeArea);
+          const match = cardMatches(card, query);
           card.hidden = !match;
           if (match) visible++;
         }
+        return visible;
+      }
+
+      function renderBrowseState(visible: number, query: string) {
         resultCount.textContent = `Showing ${visible} ${visible === 1 ? "cafe" : "cafes"}`;
         empty.hidden = visible !== 0 || cards.length === 0;
-        clearFilters.hidden = !q && !activeArea && sort.value === "newest";
+        clearFilters.hidden = !query && !activeArea && sort.value === "newest";
+      }
+
+      function apply() {
+        const query = input.value.trim().toLowerCase();
+        const visible = renderCards(query);
+        renderBrowseState(visible, query);
         syncUrl();
       }
 
