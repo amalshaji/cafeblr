@@ -63,6 +63,7 @@ const fontsPromise = Promise.all(
     return [name, data] as const;
   }),
 );
+const faviconPromise = readFile(join(process.cwd(), "public/favicon.svg"), "utf8");
 
 async function loadFonts() {
   const fonts = Object.fromEntries(await fontsPromise);
@@ -98,6 +99,11 @@ async function loadFonts() {
       style: "normal" as const,
     },
   ];
+}
+
+async function loadFaviconDataUrl() {
+  const svg = await faviconPromise;
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 
 function stat(label: string, value: string) {
@@ -213,7 +219,7 @@ function cafeRow(cafe: (typeof seoStats.latestCafes)[number], index: number) {
   );
 }
 
-function ogMarkup() {
+function ogMarkup(iconSrc: string) {
   const areaChips = seoStats.topAreas.map(([area, count]) => areaChip(area, count));
   const latestRows = seoStats.latestCafes
     .slice(0, 2)
@@ -267,23 +273,18 @@ function ogMarkup() {
             },
             [
               el(
-                "div",
+                "img",
                 {
+                  src: iconSrc,
+                  width: 46,
+                  height: 46,
                   style: {
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     width: 46,
                     height: 46,
-                    borderRadius: 11,
-                    backgroundColor: colors.ink,
-                    color: colors.canvas,
-                    fontFamily: "Fraunces",
-                    fontSize: 27,
-                    fontWeight: 600,
+                    flexShrink: 0,
                   },
                 },
-                "c",
               ),
               el(
                 "div",
@@ -437,7 +438,7 @@ function ogMarkup() {
 }
 
 export const GET: APIRoute = async () => {
-  const svg = await satori(ogMarkup(), {
+  const svg = await satori(ogMarkup(await loadFaviconDataUrl()), {
     width,
     height,
     fonts: await loadFonts(),
