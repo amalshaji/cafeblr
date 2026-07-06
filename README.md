@@ -86,6 +86,9 @@ Cloudflare Workers with static assets (`wrangler.jsonc` points at `dist/`).
 The repo is connected to Workers Builds — every push to `main` builds
 (`bun run build`) and deploys; PRs get preview URLs.
 
+SEO canonical URLs default to `https://cafeblr.com`. If the production origin
+changes, set `PUBLIC_SITE_URL` in the build environment.
+
 ## Notes
 
 - Photos belong to their posters on X; cards always credit the author and link
