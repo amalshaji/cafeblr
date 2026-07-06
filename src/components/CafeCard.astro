@@ -15,12 +15,14 @@ function formatLikes(n: number): string {
 
 // pbs.twimg.com supports size variants via ?name=; use a smaller one for the grid.
 const gridImage = cafe.image.includes("?") ? cafe.image : `${cafe.image}?name=medium`;
-const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor}`.toLowerCase();
+const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor} ${cafe.author}`.toLowerCase();
 ---
 
 <article
   class="card"
+  data-id={cafe.id}
   data-area={cafe.area}
+  data-likes={cafe.likes}
   data-search={searchText}
   style={`--i: ${index}`}
 >
@@ -33,7 +35,15 @@ const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor}`.toLowerCase();
   >
     {
       cafe.video ? (
-        <video src={cafe.video} poster={gridImage} muted playsinline loop preload="none" />
+        <video
+          src={cafe.video}
+          poster={gridImage}
+          muted
+          playsinline
+          loop
+          preload="none"
+          onerror="this.closest('.card-media')?.classList.add('is-broken')"
+        />
       ) : (
         <img
           src={gridImage}
@@ -41,6 +51,7 @@ const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor}`.toLowerCase();
           loading={index < 4 ? "eager" : "lazy"}
           decoding="async"
           referrerpolicy="no-referrer"
+          onerror="this.closest('.card-media')?.classList.add('is-broken')"
         />
       )
     }
@@ -61,13 +72,13 @@ const searchText = `${cafe.name} ${cafe.area} ${cafe.knownFor}`.toLowerCase();
     </div>
     <p class="card-known">{cafe.knownFor}</p>
     <div class="card-actions">
-      <a href={cafe.source} target="_blank" rel="noopener">
+      <a href={cafe.source} target="_blank" rel="noopener" aria-label={`Original X post about ${cafe.name} by ${cafe.author}`}>
         {cafe.author} on X
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
           <path d="M3 9L9 3M4 3h5v5"></path>
         </svg>
       </a>
-      <a href={directionsUrl(cafe)} target="_blank" rel="noopener">
+      <a href={directionsUrl(cafe)} target="_blank" rel="noopener" aria-label={`Directions to ${cafe.name} in ${cafe.area}`}>
         Directions
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
           <path d="M3 9L9 3M4 3h5v5"></path>

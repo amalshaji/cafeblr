@@ -24,6 +24,7 @@ function fail(errors: string[]): never {
 }
 
 const errors: string[] = [];
+const warnings: string[] = [];
 
 let parsed: unknown;
 try {
@@ -47,17 +48,52 @@ cafes.forEach((cafe, index) => {
 });
 
 const sources = new Map<string, number>();
+const cafeNames = new Map<string, number>();
+const genericKnownFor = new Set([
+  "coffee",
+  "good coffee",
+  "great coffee",
+  "nice cafe",
+  "good food",
+  "great food",
+]);
+
+function sourceKey(source: string): string {
+  return source.replace("//twitter.com/", "//x.com/");
+}
+
+function cafeNameAreaKey(cafe: Cafe): string {
+  return `${cafe.name.toLowerCase()}|${cafe.area.toLowerCase()}`;
+}
+
+function isGenericKnownFor(cafe: Cafe): boolean {
+  return genericKnownFor.has(cafe.knownFor.toLowerCase());
+}
+
 for (const cafe of cafes) {
-  const canonical = cafe.source.replace("//twitter.com/", "//x.com/");
-  const existing = sources.get(canonical);
-  if (existing !== undefined) {
-    errors.push(`duplicate source tweet: ${cafe.source} (ids ${existing} and ${cafe.id})`);
+  const duplicateSourceId = sources.get(sourceKey(cafe.source));
+  if (duplicateSourceId !== undefined) {
+    errors.push(`duplicate source tweet: ${cafe.source} (ids ${duplicateSourceId} and ${cafe.id})`);
   } else {
-    sources.set(canonical, cafe.id);
+    sources.set(sourceKey(cafe.source), cafe.id);
+  }
+
+  const duplicateCafeId = cafeNames.get(cafeNameAreaKey(cafe));
+  if (duplicateCafeId !== undefined) {
+    errors.push(
+      `duplicate cafe name + area: "${cafe.name}" in ${cafe.area} (ids ${duplicateCafeId} and ${cafe.id})`,
+    );
+  } else {
+    cafeNames.set(cafeNameAreaKey(cafe), cafe.id);
+  }
+
+  if (isGenericKnownFor(cafe)) {
+    warnings.push(`id ${cafe.id} ("${cafe.name}"): knownFor is very generic`);
   }
 }
 
 if (errors.length > 0) fail(errors);
+for (const warning of warnings) console.warn(`! ${warning}`);
 
 // --- live checks -----------------------------------------------------------
 

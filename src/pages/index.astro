@@ -1,6 +1,6 @@
 ---
-import "@fontsource-variable/fraunces";
-import "@fontsource-variable/figtree";
+import figtreeFontUrl from "@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url";
+import frauncesFontUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
 import "@/src/styles/global.css";
 import CafeCard from "@/src/components/CafeCard.astro";
 import { areasByPopularity, cafesByNewest } from "@/src/lib/cafes";
@@ -17,6 +17,8 @@ const areas = areasByPopularity;
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href={figtreeFontUrl} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={frauncesFontUrl} as="font" type="font/woff2" crossorigin="anonymous" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content={SEO.themeColor} />
@@ -83,18 +85,35 @@ const areas = areasByPopularity;
         </aside>
       </section>
 
-      <nav class="chip-rail" aria-label="Filter by area">
-        <button class="chip" data-area="" aria-pressed="true">
-          All <span class="n">{cafes.length}</span>
-        </button>
-        {
-          areas.map(([area, count]) => (
-            <button class="chip" data-area={area} aria-pressed="false">
-              {area} <span class="n">{count}</span>
-            </button>
-          ))
-        }
-      </nav>
+      <section class="browse-tools" aria-label="Browse cafes">
+        <nav class="chip-rail" aria-label="Filter by area">
+          <button class="chip" data-area="" aria-pressed="true">
+            All <span class="n">{cafes.length}</span>
+          </button>
+          {
+            areas.map(([area, count]) => (
+              <button class="chip" data-area={area} aria-pressed="false">
+                {area} <span class="n">{count}</span>
+              </button>
+            ))
+          }
+        </nav>
+        <div class="browse-meta">
+          <div class="sort-tools">
+            <label>
+              Sort
+              <select id="sort">
+                <option value="newest">Newest</option>
+                <option value="liked">Most liked</option>
+                <option value="area">Area</option>
+                <option value="random">Random</option>
+              </select>
+            </label>
+            <button class="clear-filters" id="clear-filters" type="button" hidden>Clear filters</button>
+          </div>
+          <p class="result-count" id="result-count" aria-live="polite">Showing {cafes.length} cafes</p>
+        </div>
+      </section>
 
       <section class="grid" id="grid" aria-live="polite">
         {cafes.map((cafe, i) => <CafeCard cafe={cafe} index={i} />)}
@@ -118,33 +137,115 @@ const areas = areasByPopularity;
 
     <script>
       const input = document.getElementById("search") as HTMLInputElement;
+      const sort = document.getElementById("sort") as HTMLSelectElement;
       const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
+      const grid = document.getElementById("grid")!;
       const cards = [...document.querySelectorAll<HTMLElement>(".card")];
       const empty = document.getElementById("empty")!;
+      const resultCount = document.getElementById("result-count")!;
+      const clearFilters = document.getElementById("clear-filters") as HTMLButtonElement;
       let activeArea = "";
 
-      function apply() {
-        const q = input.value.trim().toLowerCase();
+      const validAreas = new Set(chips.map((chip) => chip.dataset.area ?? ""));
+      const validSorts = new Set([...sort.options].map((option) => option.value));
+      const params = new URLSearchParams(window.location.search);
+      const areaParam = params.get("area") ?? "";
+      const sortParam = params.get("sort") ?? "newest";
+
+      input.value = params.get("q") ?? "";
+      activeArea = validAreas.has(areaParam) ? areaParam : "";
+      sort.value = validSorts.has(sortParam) ? sortParam : "newest";
+
+      function syncChips() {
+        for (const chip of chips) {
+          chip.setAttribute("aria-pressed", String((chip.dataset.area ?? "") === activeArea));
+        }
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        const q = input.value.trim();
+        if (q) next.set("q", q);
+        if (activeArea) next.set("area", activeArea);
+        if (sort.value !== "newest") next.set("sort", sort.value);
+        const query = next.toString();
+        history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
+      }
+
+      function sortCards() {
+        const ordered = [...cards];
+        if (sort.value === "liked") {
+          ordered.sort((a, b) => Number(b.dataset.likes) - Number(a.dataset.likes));
+        } else if (sort.value === "area") {
+          ordered.sort(
+            (a, b) =>
+              a.dataset.area!.localeCompare(b.dataset.area!) ||
+              Number(b.dataset.id) - Number(a.dataset.id),
+          );
+        } else if (sort.value === "random") {
+          ordered.sort(() => Math.random() - 0.5);
+        } else {
+          ordered.sort((a, b) => Number(b.dataset.id) - Number(a.dataset.id));
+        }
+        for (const card of ordered) grid.append(card);
+      }
+
+      function cardMatches(card: HTMLElement, query: string): boolean {
+        return (
+          (!query || card.dataset.search!.includes(query)) &&
+          (!activeArea || card.dataset.area === activeArea)
+        );
+      }
+
+      function renderCards(query: string): number {
         let visible = 0;
         for (const card of cards) {
-          const match =
-            (!q || card.dataset.search!.includes(q)) &&
-            (!activeArea || card.dataset.area === activeArea);
+          const match = cardMatches(card, query);
           card.hidden = !match;
           if (match) visible++;
         }
+        return visible;
+      }
+
+      function renderBrowseState(visible: number, query: string) {
+        resultCount.textContent = `Showing ${visible} ${visible === 1 ? "cafe" : "cafes"}`;
         empty.hidden = visible !== 0 || cards.length === 0;
+        clearFilters.hidden = !query && !activeArea && sort.value === "newest";
+      }
+
+      function apply() {
+        const query = input.value.trim().toLowerCase();
+        const visible = renderCards(query);
+        renderBrowseState(visible, query);
+        syncUrl();
       }
 
       input.addEventListener("input", apply);
+      sort.addEventListener("change", () => {
+        sortCards();
+        apply();
+      });
+      clearFilters.addEventListener("click", () => {
+        input.value = "";
+        activeArea = "";
+        sort.value = "newest";
+        syncChips();
+        sortCards();
+        apply();
+        input.focus();
+      });
 
       for (const chip of chips) {
         chip.addEventListener("click", () => {
           activeArea = chip.dataset.area ?? "";
-          for (const c of chips) c.setAttribute("aria-pressed", String(c === chip));
+          syncChips();
           apply();
         });
       }
+
+      syncChips();
+      sortCards();
+      apply();
     </script>
   </body>
 </html>
