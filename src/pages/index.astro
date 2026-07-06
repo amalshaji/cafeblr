@@ -12,6 +12,15 @@ const ADD_CAFE_URL = `${GITHUB_URL}/issues/new?template=add-cafe.yml`;
 const cafes = cafesByNewest;
 const areas = areasByPopularity;
 const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
+const compactNumber = new Intl.NumberFormat("en-IN", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+const introStats = [
+  { value: cafes.length.toLocaleString("en-IN"), label: "cafes" },
+  { value: areas.length.toLocaleString("en-IN"), label: "areas" },
+  { value: compactNumber.format(cafes.reduce((total, cafe) => total + cafe.likes, 0)), label: "X likes" },
+];
 ---
 
 <html lang="en">
@@ -80,6 +89,7 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
             placeholder="Search cafes, areas, vibes…"
             autocomplete="off"
             aria-label="Search cafes"
+            aria-controls="grid"
           />
         </label>
         <button class="theme-toggle" id="theme" type="button" aria-label="Theme: Auto" title="Theme: Auto">
@@ -95,7 +105,10 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
             <path d="M13.2 10.2A5.4 5.4 0 0 1 5.8 2.8a5.6 5.6 0 1 0 7.4 7.4Z"></path>
           </svg>
         </button>
-        <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener">+ Add a cafe</a>
+        <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener">
+          <span class="add-full">+ Add a cafe</span>
+          <span class="add-short">+ Add</span>
+        </a>
       </div>
     </header>
 
@@ -106,6 +119,16 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
           Every spot here comes from a post people actually loved. Tap the heart for the
           receipts, or get directions and go.
         </p>
+        <dl class="intro-stats" aria-label="Cafe BLR stats">
+          {
+            introStats.map((stat) => (
+              <div>
+                <dt>{stat.value}</dt>
+                <dd>{stat.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
         <aside class="definition">
           <p class="def-head">
             <dfn>ca·fé</dfn>
@@ -119,12 +142,12 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
 
       <section class="browse-tools" aria-label="Browse cafes">
         <nav class="chip-rail" aria-label="Filter by area">
-          <button class="chip" data-area="" aria-pressed="true">
+          <button class="chip" data-area="" aria-pressed="true" aria-label={`All areas, ${cafes.length} cafes`}>
             All <span class="n">{cafes.length}</span>
           </button>
           {
             areas.map(([area, count]) => (
-              <button class="chip" data-area={area} aria-pressed="false">
+              <button class="chip" data-area={area} aria-pressed="false" aria-label={`${area}, ${count} cafes`}>
                 {area} <span class="n">{count}</span>
               </button>
             ))
@@ -134,7 +157,7 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
           <div class="sort-tools">
             <label>
               Sort
-              <select id="sort">
+              <select id="sort" aria-label="Sort cafes" aria-controls="grid">
                 <option value="newest">Newest</option>
                 <option value="liked">Most liked</option>
                 {hasGoogleRatings && <option value="rated">Top rated</option>}
@@ -142,11 +165,11 @@ const hasGoogleRatings = cafes.some((cafe) => cafe.googleRating !== null);
             </label>
             <button class="clear-filters" id="clear-filters" type="button" hidden>Clear filters</button>
           </div>
-          <p class="result-count" id="result-count" aria-live="polite">Showing {cafes.length} cafes</p>
+          <p class="result-count" id="result-count" aria-live="polite" aria-atomic="true">Showing {cafes.length} cafes</p>
         </div>
       </section>
 
-      <section class="grid" id="grid" aria-live="polite">
+      <section class="grid" id="grid">
         {cafes.map((cafe, i) => <CafeCard cafe={cafe} index={i} />)}
       </section>
 
