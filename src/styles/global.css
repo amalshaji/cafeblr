@@ -210,6 +210,10 @@ button {
   background: var(--wash);
 }
 
+.add-short {
+  display: none;
+}
+
 .theme-toggle {
   display: inline-grid;
   place-items: center;
@@ -267,6 +271,35 @@ button {
   color: var(--muted);
   font-size: 16.5px;
   max-width: 52ch;
+}
+
+.intro-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.intro-stats div {
+  min-width: 92px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--wash);
+}
+
+.intro-stats dt {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.intro-stats dd {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 650;
 }
 
 /* dictionary-entry aside: the site's charter */
@@ -550,6 +583,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  flex-shrink: 0;
   width: fit-content;
   color: var(--muted);
   font-size: 13.5px;
@@ -584,12 +618,9 @@ button {
   font-weight: 600;
 }
 
-.card-credit {
+.card-meta {
   min-width: 0;
-  overflow: hidden;
   color: var(--muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .card-actions a {
@@ -597,6 +628,7 @@ button {
   align-items: center;
   gap: 5px;
   flex-shrink: 0;
+  margin-left: auto;
   color: var(--accent);
 }
 
@@ -661,6 +693,7 @@ button {
 @media (max-width: 720px) {
   .site-header .wrap {
     flex-wrap: wrap;
+    column-gap: 10px;
     height: auto;
     padding-top: 12px;
     padding-bottom: 12px;
@@ -675,10 +708,29 @@ button {
 
   .add-link {
     margin-left: auto;
+    padding-inline: 13px;
+  }
+
+  .add-full {
+    display: none;
+  }
+
+  .add-short {
+    display: inline;
+  }
+
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
   }
 
   .intro {
     padding-top: 28px;
+  }
+
+  .intro-stats div {
+    flex: 1;
+    min-width: 0;
   }
 
   .browse-meta {
