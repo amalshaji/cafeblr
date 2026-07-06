@@ -27,6 +27,7 @@ export const cafeSchema = z
         message: "must be a Google Maps URL",
       })
       .nullable(),
+    googleRating: z.number().min(0).max(5).nullable(),
     source: z
       .string()
       .regex(
