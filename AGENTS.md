@@ -36,7 +36,7 @@ Everything renders from one data file: `data/cafes.json`.
 
 ## Adding a cafe
 
-The workflow is documented in the README ("Add a cafe" rules, enforced by CI) and automated by the agent skill in `skills/add-to-cafeblr/SKILL.md` — follow that skill when given a tweet URL to add. Key guardrails: entry needs a photo, a live source tweet not already in the list, an author who is a real person sharing a find (no brand/marketing/news accounts), `knownFor` paraphrases what the post itself praises (never invent), and `id` = max + 1 computed against latest `main`.
+The workflow is documented in the README ("Add a cafe" rules, enforced by CI) and automated by the agent skill in `skills/add-to-cafeblr/SKILL.md` — follow that skill when given a tweet URL to add. Key guardrails: entry needs a photo, a live source tweet not already in the list, an author who is a real person sharing a find (no brand/marketing/news accounts), `knownFor` paraphrases what the post itself praises (never invent), `image` prefers tweet media that shows food or drink before falling back to the best available tweet image, and `id` = max + 1 computed against latest `main`.
 
 ## Documentation
 
