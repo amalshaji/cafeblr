@@ -1,25 +1,14 @@
-import cafesData from "../../data/cafes.json";
-import { cafesSchema } from "./schema";
+import { areasByPopularity, cafes, cafesByNewest, latestCafes, topAreas } from "./cafes";
 
 const DEFAULT_SITE_URL = "https://cafeblr.com";
 const configuredSiteUrl = import.meta.env.PUBLIC_SITE_URL?.trim();
 const siteUrl = (configuredSiteUrl || DEFAULT_SITE_URL).replace(/\/+$/, "");
 
-const cafes = cafesSchema.parse(cafesData);
-const sortedCafes = [...cafes].sort((a, b) => b.id - a.id);
-
-const areaCounts = new Map<string, number>();
-for (const cafe of cafes) {
-  areaCounts.set(cafe.area, (areaCounts.get(cafe.area) ?? 0) + 1);
-}
-
 export const seoStats = {
   cafeCount: cafes.length,
-  areaCount: areaCounts.size,
-  topAreas: [...areaCounts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 5),
-  latestCafes: sortedCafes.slice(0, 3).map((cafe) => ({
+  areaCount: areasByPopularity.length,
+  topAreas: topAreas(5),
+  latestCafes: latestCafes(3).map((cafe) => ({
     name: cafe.name,
     area: cafe.area,
     knownFor: cafe.knownFor,
@@ -60,7 +49,7 @@ const structuredData = {
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: cafes.length,
-    itemListElement: sortedCafes.map((cafe, index) => ({
+    itemListElement: cafesByNewest.map((cafe, index) => ({
       "@type": "ListItem",
       position: index + 1,
       item: {
