@@ -34,6 +34,7 @@ export const cafeSchema = z
         /^https:\/\/(x|twitter)\.com\/\w{1,15}\/status\/\d+$/,
         "must be a https://x.com/<user>/status/<id> URL",
       ),
+    postedAt: z.iso.datetime(),
     author: z.string().regex(/^@\w{1,15}$/, "must be an @handle"),
     likes: z.number().int().nonnegative(),
     addedAt: z.iso.date(),

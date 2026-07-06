@@ -55,9 +55,11 @@ Maintainers can also open a pull request that appends one entry to `data/cafes.j
   "video": null,
   "mapsUrl": null,
   "source": "https://x.com/someone/status/1234567890",
+  "postedAt": "2026-07-06T12:34:56.000Z",
   "author": "@someone",
   "likes": 123,
-  "addedAt": "2026-07-06"
+  "addedAt": "2026-07-06",
+  "googleRating": null
 }
 ```
 
@@ -65,11 +67,13 @@ Rules (CI enforces them):
 
 - `id` — next integer (`max + 1`), entries stay in id order.
 - `source` — the X post the cafe was found in; must be unique across the file.
+- `postedAt` — the source post timestamp from the tweet page, as an ISO datetime.
 - `image` — the post's photo (`pbs.twimg.com` URL). If the post has multiple
   media items, inspect them and prefer a food/drink image first; if none show
   food or drink, use the best available tweet image. `video` — optional mp4 URL.
 - `mapsUrl` — optional Google Maps link; when `null` the site generates a
   directions search from name + area.
+- `googleRating` — optional Google Maps rating for the exact place, or `null` if unknown.
 - `likes` — the post's like count when you added it.
 - The post must exist and the image must load — CI re-fetches both for new
   entries only, so old entries never break the build if a tweet disappears.
