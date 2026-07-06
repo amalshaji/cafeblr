@@ -7,7 +7,7 @@ import { areasByPopularity, cafesByNewest } from "@/src/lib/cafes";
 import { SEO, structuredDataJson } from "@/src/lib/seo";
 
 const GITHUB_URL = "https://github.com/amalshaji/cafeblr";
-const ADD_CAFE_URL = `${GITHUB_URL}#add-a-cafe`;
+const ADD_CAFE_URL = `${GITHUB_URL}/issues/new?template=add-cafe.yml`;
 
 const cafes = cafesByNewest;
 const areas = areasByPopularity;
@@ -121,7 +121,7 @@ const areas = areasByPopularity;
 
       <div class="empty" id="empty" hidden>
         <strong>No cafes match that.</strong>
-        Know a spot the internet loves? <a href={ADD_CAFE_URL} target="_blank" rel="noopener">Add it via a pull request</a>.
+        Know a spot the internet loves? <a href={ADD_CAFE_URL} target="_blank" rel="noopener">Suggest it with a tweet URL</a>.
       </div>
     </main>
 
@@ -129,7 +129,7 @@ const areas = areasByPopularity;
       <div class="wrap">
         <span>
           Every cafe here earned its spot — sourced from posts Bengaluru loved.
-          Add one via a&nbsp;<a href={ADD_CAFE_URL} target="_blank" rel="noopener">pull request</a>.
+          Suggest one with a&nbsp;<a href={ADD_CAFE_URL} target="_blank" rel="noopener">tweet URL</a>.
         </span>
         <span>Photos belong to their posters on X. Each card links to the original post.</span>
       </div>
