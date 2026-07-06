@@ -22,6 +22,24 @@ const areas = areasByPopularity;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content={SEO.themeColor} />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      (() => {
+        const key = "cafeblr-theme";
+        const modes = ["light", "dark", "auto"];
+        const query = "(prefers-color-scheme: dark)";
+        let mode = "auto";
+        try {
+          const stored = localStorage.getItem(key);
+          if (stored && modes.includes(stored)) mode = stored;
+        } catch {}
+        const theme = mode === "dark" || (mode === "auto" && matchMedia(query).matches) ? "dark" : "light";
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "dark" ? "#15110e" : "#ffffff");
+      })();
+    </script>
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={SEO.canonicalUrl} />
     <title>{SEO.title}</title>
@@ -62,6 +80,14 @@ const areas = areasByPopularity;
             autocomplete="off"
             aria-label="Search cafes"
           />
+        </label>
+        <label class="theme-switcher">
+          <span>Theme</span>
+          <select id="theme" aria-label="Theme">
+            <option value="auto">Auto</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
         </label>
         <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener">+ Add a cafe</a>
       </div>
@@ -138,6 +164,7 @@ const areas = areasByPopularity;
     <script>
       const input = document.getElementById("search") as HTMLInputElement;
       const sort = document.getElementById("sort") as HTMLSelectElement;
+      const theme = document.getElementById("theme") as HTMLSelectElement;
       const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
       const grid = document.getElementById("grid")!;
       const cards = [...document.querySelectorAll<HTMLElement>(".card")];
@@ -145,6 +172,49 @@ const areas = areasByPopularity;
       const resultCount = document.getElementById("result-count")!;
       const clearFilters = document.getElementById("clear-filters") as HTMLButtonElement;
       let activeArea = "";
+
+      const THEME_KEY = "cafeblr-theme";
+      const THEME_COLORS = { light: "#ffffff", dark: "#15110e" };
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const validThemes = new Set(["light", "dark", "auto"]);
+      const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+
+      function selectedTheme(): string {
+        const mode = document.documentElement.dataset.themeMode;
+        if (mode && validThemes.has(mode)) return mode;
+        try {
+          const stored = localStorage.getItem(THEME_KEY);
+          return stored && validThemes.has(stored) ? stored : "auto";
+        } catch {
+          return "auto";
+        }
+      }
+
+      function resolvedTheme(mode: string): "light" | "dark" {
+        return mode === "dark" || (mode === "auto" && systemTheme.matches) ? "dark" : "light";
+      }
+
+      function applyTheme(mode: string) {
+        const resolved = resolvedTheme(mode);
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.style.colorScheme = resolved;
+        if (themeColor) themeColor.content = THEME_COLORS[resolved];
+      }
+
+      theme.value = selectedTheme();
+      applyTheme(theme.value);
+
+      theme.addEventListener("change", () => {
+        try {
+          localStorage.setItem(THEME_KEY, theme.value);
+        } catch {}
+        applyTheme(theme.value);
+      });
+
+      systemTheme.addEventListener("change", () => {
+        if (document.documentElement.dataset.themeMode === "auto") applyTheme("auto");
+      });
 
       const validAreas = new Set(chips.map((chip) => chip.dataset.area ?? ""));
       const validSorts = new Set([...sort.options].map((option) => option.value));
