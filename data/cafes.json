@@ -643,5 +643,35 @@
     "likes": 242,
     "addedAt": "2026-07-08",
     "googleRating": null
+  },
+  {
+    "id": 44,
+    "name": "Khao Aur Khane Do",
+    "area": "Indiranagar",
+    "knownFor": "Malai toast in Indiranagar that reminded the author of home",
+    "image": "https://pbs.twimg.com/media/HJFQ5F_aoAAzsi-.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/PalakAhujaaaa/status/2058515461688762593",
+    "postedAt": "2026-05-24T11:48:26.000Z",
+    "author": "@PalakAhujaaaa",
+    "likes": 1035,
+    "addedAt": "2026-07-08",
+    "googleRating": null
+  },
+  {
+    "id": 45,
+    "name": "Drip Drop",
+    "area": "JP Nagar",
+    "knownFor": "Gatekept JP Nagar cafe find with a bright coffee-bar interior",
+    "image": "https://pbs.twimg.com/media/GeQ8pZgbAAAhQvw.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/theoldmnk/status/1865682859538939944",
+    "postedAt": "2024-12-08T09:00:31.000Z",
+    "author": "@theoldmnk",
+    "likes": 865,
+    "addedAt": "2026-07-08",
+    "googleRating": null
   }
 ]
