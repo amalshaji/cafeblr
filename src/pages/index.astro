@@ -90,7 +90,9 @@ const introStats = [
             autocomplete="off"
             aria-label="Search cafes"
             aria-controls="grid"
+            aria-keyshortcuts="/"
           />
+          <kbd class="search-shortcut" aria-hidden="true">/</kbd>
         </label>
         <button class="theme-toggle" id="theme" type="button" aria-label="Theme: Auto" title="Theme: Auto">
           <svg class="theme-icon icon-auto" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
@@ -252,6 +254,19 @@ const introStats = [
 
       systemTheme.addEventListener("change", () => {
         if (document.documentElement.dataset.themeMode === "auto") applyTheme("auto");
+      });
+
+      function isEditableTarget(target: EventTarget | null): boolean {
+        if (!(target instanceof HTMLElement)) return false;
+        return target.isContentEditable || ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName);
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey || isEditableTarget(event.target)) {
+          return;
+        }
+        event.preventDefault();
+        input.focus();
       });
 
       const validAreas = new Set(chips.map((chip) => chip.dataset.area ?? ""));

@@ -183,13 +183,29 @@ button {
 }
 
 .search input {
+  min-width: 0;
+  width: 100%;
   border: none;
   outline: none;
-  width: 100%;
   font: inherit;
   font-size: 15px;
   color: var(--ink);
   background: transparent;
+}
+
+.search-shortcut {
+  flex-shrink: 0;
+  min-width: 22px;
+  padding: 1px 7px 2px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  background: var(--wash);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
 }
 
 .search input::placeholder {
