@@ -673,5 +673,20 @@
     "likes": 865,
     "addedAt": "2026-07-08",
     "googleRating": 4.8
+  },
+  {
+    "id": 46,
+    "name": "Juno Coffee Club",
+    "area": "HSR Layout",
+    "knownFor": "Characterful interiors with vinyl, books and manga, plus banger brownies",
+    "image": "https://pbs.twimg.com/media/HMslbbhbgAAnhqP.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/place/Juno+Coffee+Club/data=!4m2!3m1!1s0x3bae1549de25416f:0xe532463da16ed137?sa=X",
+    "source": "https://x.com/sidsimharaju/status/2074793243469083055",
+    "postedAt": "2026-07-08T09:50:31.000Z",
+    "author": "@sidsimharaju",
+    "likes": 72,
+    "addedAt": "2026-07-08",
+    "googleRating": 4.5
   }
 ]
