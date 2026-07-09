@@ -763,5 +763,20 @@
     "likes": 24,
     "addedAt": "2026-07-08",
     "googleRating": 4.3
+  },
+  {
+    "id": 52,
+    "name": "DUM | The Royal Biryani Kitchen",
+    "area": "Indiranagar",
+    "knownFor": "Hyderabadi-style biryani with fresh paneer and juicy mushrooms",
+    "image": "https://pbs.twimg.com/media/HMtl3PMaMAIFGi0.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/place/DUM+%7C+The+Royal+Biryani+Kitchen/@12.971017,77.6448921,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae3fac443b6e33:0x8f3b868e95a4197b!8m2!3d12.971017!4d77.647467!16s%2Fg%2F11z21cc82x?entry=ttu&g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D",
+    "source": "https://x.com/ShadowOf_Gotham/status/2074864071103697334",
+    "postedAt": "2026-07-08T14:31:58.000Z",
+    "author": "@ShadowOf_Gotham",
+    "likes": 258,
+    "addedAt": "2026-07-09",
+    "googleRating": 4.7
   }
 ]
