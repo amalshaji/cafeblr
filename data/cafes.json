@@ -808,5 +808,20 @@
     "likes": 48,
     "addedAt": "2026-07-11",
     "googleRating": null
+  },
+  {
+    "id": 55,
+    "name": "The Golden Circle Brewery",
+    "area": "Sarjapur",
+    "knownFor": "A brewery tucked beside Bier Library on Sarjapur Main Road",
+    "image": "https://pbs.twimg.com/media/HM2emx_bsAE5ehi.jpg",
+    "video": null,
+    "mapsUrl": "https://maps.app.goo.gl/U1o8ux2AqdDZ9GKi6",
+    "source": "https://x.com/BhavikaLongx/status/2075489404882395219",
+    "postedAt": "2026-07-10T07:56:49.000Z",
+    "author": "@BhavikaLongx",
+    "likes": 64,
+    "addedAt": "2026-07-11",
+    "googleRating": null
   }
 ]
