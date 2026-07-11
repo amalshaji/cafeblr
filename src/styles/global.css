@@ -754,20 +754,25 @@ button {
     max-width: none;
   }
 
-  .site-header.is-compact .wrap {
+  .site-header.is-scrolled .wrap,
+  body.has-text-query .site-header .wrap {
     height: 67px;
     padding-top: 12px;
     padding-bottom: 12px;
     flex-wrap: nowrap;
   }
 
-  .site-header.is-compact .wordmark,
-  .site-header.is-compact .theme-toggle,
-  .site-header.is-compact .add-link {
+  .site-header.is-scrolled .wordmark,
+  .site-header.is-scrolled .theme-toggle,
+  .site-header.is-scrolled .add-link,
+  body.has-text-query .site-header .wordmark,
+  body.has-text-query .site-header .theme-toggle,
+  body.has-text-query .site-header .add-link {
     display: none;
   }
 
-  .site-header.is-compact .search {
+  .site-header.is-scrolled .search,
+  body.has-text-query .site-header .search {
     order: initial;
     flex-basis: auto;
   }
@@ -816,11 +821,6 @@ button {
     width: 36px;
     pointer-events: none;
     background: linear-gradient(to right, transparent, var(--canvas));
-    transition: opacity 0.15s ease;
-  }
-
-  .chip-rail-wrap[data-at-end="true"]::after {
-    opacity: 0;
   }
 
   .chip-rail {

@@ -17,9 +17,11 @@ test("search feedback stays close and clearing restores the page", async ({ page
 
   if (isMobile) {
     await expect(page.locator(".intro")).toBeHidden();
+    const viewport = page.viewportSize();
+    if (!viewport) throw new Error("Expected a configured viewport");
     const emptyBox = await page.locator("#empty").boundingBox();
     expect(emptyBox).not.toBeNull();
-    expect(emptyBox!.y + emptyBox!.height).toBeLessThanOrEqual(844);
+    expect(emptyBox!.y + emptyBox!.height).toBeLessThanOrEqual(viewport.height);
   } else {
     await expect(page.locator(".intro")).toBeVisible();
   }
@@ -37,7 +39,8 @@ test("direct query restores matching compact results on mobile", async ({ page, 
 
   await expect(page.getByRole("searchbox", { name: "Search cafes" })).toHaveValue("matcha");
   await expect(page.locator(".intro")).toBeHidden();
-  await expect(page.locator(".site-header")).toHaveClass(/is-compact/);
+  await expect(page.locator("body")).toHaveClass(/has-text-query/);
+  expect((await page.locator(".site-header").boundingBox())!.height).toBeLessThanOrEqual(68);
   const matchingCards = page.locator(".card:visible");
   await expect.poll(() => matchingCards.count()).toBeGreaterThan(0);
   const matchCount = await matchingCards.count();
@@ -127,11 +130,12 @@ test("area rail wraps on desktop and signals mobile overflow", async ({ page, is
   const wrap = page.locator(".chip-rail-wrap");
 
   if (isMobile) {
-    await expect(wrap).toHaveAttribute("data-at-end", "false");
+    const geometry = await rail.evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }));
+    expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth);
     expect(await wrap.evaluate((element) => getComputedStyle(element, "::after").opacity)).toBe("1");
-    await rail.evaluate((element) => element.scrollTo({ left: element.scrollWidth }));
-    await expect(wrap).toHaveAttribute("data-at-end", "true");
-    await expect.poll(() => wrap.evaluate((element) => getComputedStyle(element, "::after").opacity)).toBe("0");
   } else {
     const geometry = await rail.evaluate((element) => ({
       clientWidth: element.clientWidth,
@@ -153,12 +157,12 @@ test("mobile header compacts on scroll and restores near the top", async ({ page
   const input = page.getByRole("searchbox", { name: "Search cafes" });
   await input.focus();
   await page.evaluate(() => window.scrollTo(0, 300));
-  await expect(header).toHaveClass(/is-compact/);
+  await expect(header).toHaveClass(/is-scrolled/);
   expect((await header.boundingBox())!.height).toBeLessThanOrEqual(68);
   await expect(input).toBeFocused();
 
   await page.evaluate(() => window.scrollTo(0, 0));
-  await expect(header).not.toHaveClass(/is-compact/);
+  await expect(header).not.toHaveClass(/is-scrolled/);
   expect((await header.boundingBox())!.height).toBeGreaterThan(68);
 });
 
@@ -184,20 +188,22 @@ test("a URL-selected mobile area is revealed without moving the page", async ({ 
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
   const selected = await selectedChip.boundingBox();
+  const viewport = page.viewportSize();
+  if (!viewport) throw new Error("Expected a configured viewport");
   expect(selected).not.toBeNull();
   expect(selected!.x).toBeGreaterThanOrEqual(0);
-  expect(selected!.x + selected!.width).toBeLessThanOrEqual(390);
+  expect(selected!.x + selected!.width).toBeLessThanOrEqual(viewport.width);
 });
 
 test("source handles remain contained at a narrow viewport", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Narrow viewport behavior only");
   await page.setViewportSize({ width: 320, height: 720 });
   const containment = await page.locator(".card-source").first().evaluate((element) => ({
+    sourceLeft: element.getBoundingClientRect().left,
     sourceRight: element.getBoundingClientRect().right,
+    cardLeft: element.closest(".card")!.getBoundingClientRect().left,
     cardRight: element.closest(".card")!.getBoundingClientRect().right,
-    scrollWidth: element.scrollWidth,
-    clientWidth: element.clientWidth,
   }));
+  expect(containment.sourceLeft).toBeGreaterThanOrEqual(containment.cardLeft);
   expect(containment.sourceRight).toBeLessThanOrEqual(containment.cardRight);
-  expect(containment.clientWidth).toBeLessThanOrEqual(containment.scrollWidth);
 });

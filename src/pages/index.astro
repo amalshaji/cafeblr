@@ -143,7 +143,7 @@ const introStats = [
       </section>
 
       <section class="browse-tools" aria-label="Browse cafes">
-        <div class="chip-rail-wrap" data-at-end="false">
+        <div class="chip-rail-wrap">
           <nav class="chip-rail" aria-label="Filter by area">
             <button class="chip" data-area="" aria-pressed="true" aria-label={`All areas, ${cafes.length} cafes`}>
               All <span class="n">{cafes.length}</span>
@@ -198,8 +198,6 @@ const introStats = [
       const sort = document.getElementById("sort") as HTMLSelectElement;
       const theme = document.getElementById("theme") as HTMLButtonElement;
       const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
-      const chipRail = document.querySelector<HTMLElement>(".chip-rail")!;
-      const chipRailWrap = document.querySelector<HTMLElement>(".chip-rail-wrap")!;
       const siteHeader = document.querySelector<HTMLElement>(".site-header")!;
       const grid = document.getElementById("grid")!;
       const cards = [...document.querySelectorAll<HTMLElement>(".card")];
@@ -295,15 +293,8 @@ const introStats = [
         activeChip?.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
       }
 
-      function syncChipOverflow() {
-        const atEnd = chipRail.scrollLeft + chipRail.clientWidth >= chipRail.scrollWidth - 2;
-        chipRailWrap.dataset.atEnd = String(atEnd);
-      }
-
-      function syncCompactHeader() {
-        const hasTextQuery = input.value.trim().length > 0;
-        document.body.classList.toggle("has-text-query", hasTextQuery);
-        siteHeader.classList.toggle("is-compact", hasTextQuery || window.scrollY > 120);
+      function syncScrolledHeader() {
+        siteHeader.classList.toggle("is-scrolled", window.scrollY > 120);
       }
 
       function syncUrl() {
@@ -354,7 +345,7 @@ const introStats = [
         empty.hidden = visible !== 0 || cards.length === 0;
         grid.hidden = visible === 0;
         clearFilters.hidden = !query && !activeArea && sort.value === "newest";
-        syncCompactHeader();
+        document.body.classList.toggle("has-text-query", Boolean(query));
       }
 
       function apply() {
@@ -388,15 +379,13 @@ const introStats = [
         });
       }
 
-      chipRail.addEventListener("scroll", syncChipOverflow, { passive: true });
-      window.addEventListener("resize", syncChipOverflow);
-      window.addEventListener("scroll", syncCompactHeader, { passive: true });
+      window.addEventListener("scroll", syncScrolledHeader, { passive: true });
 
       syncChips();
       sortCards();
       apply();
       revealActiveChip();
-      requestAnimationFrame(syncChipOverflow);
+      syncScrolledHeader();
     </script>
     <!-- 100% privacy-first analytics -->
     <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
