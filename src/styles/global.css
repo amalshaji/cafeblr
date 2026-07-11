@@ -623,38 +623,6 @@ button {
   overflow: hidden;
 }
 
-.card-source {
-  display: inline-flex;
-  align-items: baseline;
-  align-self: flex-start;
-  max-width: 100%;
-  overflow: hidden;
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 650;
-  line-height: 1.5;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.card-source .source-prefix {
-  flex-shrink: 0;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.card-source .source-handle {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-source:hover {
-  color: var(--accent-deep);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .card-actions {
   display: flex;
   align-items: center;

@@ -75,10 +75,6 @@ const googleRatingLabel = googleRating ? `Google rating: ${googleRating} stars` 
       <span class="card-area">{cafe.area}</span>
     </div>
     <p class="card-known">{cafe.knownFor}</p>
-    <a class="card-source" href={cafe.source} target="_blank" rel="noopener">
-      <span class="source-prefix">via&nbsp;</span>
-      <span class="source-handle">{cafe.author}</span>
-    </a>
     <div class="card-actions">
       {
         googleRating && (

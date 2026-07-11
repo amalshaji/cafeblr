@@ -69,17 +69,15 @@ test("area and sort state combine and persist in the URL", async ({ page }) => {
   expect(likes).toEqual([...likes].sort((a, b) => b - a));
 });
 
-test("visible cards expose source provenance and comfortable directions", async ({ page }) => {
+test("cards keep source provenance accessible without an extra author row", async ({ page }) => {
   const cards = page.locator(".card");
   await expect(cards.first()).toBeAttached();
   const initialTotal = await cards.count();
   expect(initialTotal).toBeGreaterThan(0);
-  await expect(page.locator(".card-source")).toHaveCount(initialTotal);
+  await expect(page.locator(".card-source")).toHaveCount(0);
 
-  const firstSource = cards.first().locator(".card-source");
-  await expect(firstSource).toBeVisible();
-  await expect(firstSource.locator(".source-prefix")).toHaveText("via");
-  await expect(firstSource.locator(".source-handle")).toHaveText(/^@/);
+  const firstSource = cards.first().locator(".card-media");
+  await expect(firstSource).toHaveAccessibleName(/^Original X post about .+ by @/);
   await expect(firstSource).toHaveAttribute("href", /^https:\/\/x\.com\/.+\/status\//);
   await expect(cards.first().locator(".likes-pill")).toContainText("likes");
 
@@ -193,17 +191,4 @@ test("a URL-selected mobile area is revealed without moving the page", async ({ 
   expect(selected).not.toBeNull();
   expect(selected!.x).toBeGreaterThanOrEqual(0);
   expect(selected!.x + selected!.width).toBeLessThanOrEqual(viewport.width);
-});
-
-test("source handles remain contained at a narrow viewport", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "Narrow viewport behavior only");
-  await page.setViewportSize({ width: 320, height: 720 });
-  const containment = await page.locator(".card-source").first().evaluate((element) => ({
-    sourceLeft: element.getBoundingClientRect().left,
-    sourceRight: element.getBoundingClientRect().right,
-    cardLeft: element.closest(".card")!.getBoundingClientRect().left,
-    cardRight: element.closest(".card")!.getBoundingClientRect().right,
-  }));
-  expect(containment.sourceLeft).toBeGreaterThanOrEqual(containment.cardLeft);
-  expect(containment.sourceRight).toBeLessThanOrEqual(containment.cardRight);
 });
