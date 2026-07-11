@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test:ui": "playwright test",
     "validate": "bun scripts/validate.ts",
     "astro": "astro"
   },
@@ -21,5 +22,8 @@
     "satori": "^0.26.0",
     "sharp": "^0.35.3",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
   }
 }
