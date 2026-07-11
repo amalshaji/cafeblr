@@ -778,5 +778,50 @@
     "likes": 343,
     "addedAt": "2026-07-09",
     "googleRating": 4.7
+  },
+  {
+    "id": 53,
+    "name": "Mara",
+    "area": "HSR Layout",
+    "knownFor": "A really cute cafe with coffee and refreshing drinks",
+    "image": "https://pbs.twimg.com/media/HM3iWWfbEAADRKZ.jpg",
+    "video": null,
+    "mapsUrl": "https://maps.app.goo.gl/i2PL5htJboeJ8xA59",
+    "source": "https://x.com/_darshi/status/2075563921512231417",
+    "postedAt": "2026-07-10T12:52:55.000Z",
+    "author": "@_darshi",
+    "likes": 185,
+    "addedAt": "2026-07-11",
+    "googleRating": 4.4
+  },
+  {
+    "id": 54,
+    "name": "Eddy’s",
+    "area": "Indiranagar",
+    "knownFor": "Breakfast with 7/10 taste and ambience, and 8/10 service",
+    "image": "https://pbs.twimg.com/media/HM2HPrBacAAVnjL.jpg",
+    "video": null,
+    "mapsUrl": "https://maps.app.goo.gl/c7x5zbm1QepKwCHMA",
+    "source": "https://x.com/niketrajdwivedi/status/2075463793216544890",
+    "postedAt": "2026-07-10T06:15:03.000Z",
+    "author": "@niketrajdwivedi",
+    "likes": 48,
+    "addedAt": "2026-07-11",
+    "googleRating": 4.3
+  },
+  {
+    "id": 55,
+    "name": "The Golden Circle Brewery",
+    "area": "Sarjapur",
+    "knownFor": "A brewery tucked beside Bier Library on Sarjapur Main Road",
+    "image": "https://pbs.twimg.com/media/HM2emx_bsAE5ehi.jpg",
+    "video": null,
+    "mapsUrl": "https://maps.app.goo.gl/U1o8ux2AqdDZ9GKi6",
+    "source": "https://x.com/BhavikaLongx/status/2075489404882395219",
+    "postedAt": "2026-07-10T07:56:49.000Z",
+    "author": "@BhavikaLongx",
+    "likes": 64,
+    "addedAt": "2026-07-11",
+    "googleRating": 4.6
   }
 ]
