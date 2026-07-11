@@ -26,3 +26,9 @@ jobs:
 
       - name: Build site
         run: bun run build
+
+      - name: Install Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Test UI
+        run: bun run test:ui

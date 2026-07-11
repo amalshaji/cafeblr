@@ -107,7 +107,7 @@ const introStats = [
             <path d="M13.2 10.2A5.4 5.4 0 0 1 5.8 2.8a5.6 5.6 0 1 0 7.4 7.4Z"></path>
           </svg>
         </button>
-        <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener">
+        <a class="add-link" href={ADD_CAFE_URL} target="_blank" rel="noopener" aria-label="Add a cafe">
           <span class="add-full">+ Add a cafe</span>
           <span class="add-short">+ Add</span>
         </a>
@@ -143,18 +143,20 @@ const introStats = [
       </section>
 
       <section class="browse-tools" aria-label="Browse cafes">
-        <nav class="chip-rail" aria-label="Filter by area">
-          <button class="chip" data-area="" aria-pressed="true" aria-label={`All areas, ${cafes.length} cafes`}>
-            All <span class="n">{cafes.length}</span>
-          </button>
-          {
-            areas.map(([area, count]) => (
-              <button class="chip" data-area={area} aria-pressed="false" aria-label={`${area}, ${count} cafes`}>
-                {area} <span class="n">{count}</span>
-              </button>
-            ))
-          }
-        </nav>
+        <div class="chip-rail-wrap" data-at-end="false">
+          <nav class="chip-rail" aria-label="Filter by area">
+            <button class="chip" data-area="" aria-pressed="true" aria-label={`All areas, ${cafes.length} cafes`}>
+              All <span class="n">{cafes.length}</span>
+            </button>
+            {
+              areas.map(([area, count]) => (
+                <button class="chip" data-area={area} aria-pressed="false" aria-label={`${area}, ${count} ${count === 1 ? "cafe" : "cafes"}`}>
+                  {area} <span class="n">{count}</span>
+                </button>
+              ))
+            }
+          </nav>
+        </div>
         <div class="browse-meta">
           <div class="sort-tools">
             <label>
@@ -169,16 +171,16 @@ const introStats = [
           </div>
           <p class="result-count" id="result-count" aria-live="polite" aria-atomic="true">Showing {cafes.length} cafes</p>
         </div>
+        <div class="empty" id="empty" hidden>
+          <strong>No cafes match that.</strong>
+          Know a spot the internet loves? <a href={ADD_CAFE_URL} target="_blank" rel="noopener">Suggest it with a tweet URL</a>.
+        </div>
       </section>
 
       <section class="grid" id="grid">
         {cafes.map((cafe, i) => <CafeCard cafe={cafe} index={i} />)}
       </section>
 
-      <div class="empty" id="empty" hidden>
-        <strong>No cafes match that.</strong>
-        Know a spot the internet loves? <a href={ADD_CAFE_URL} target="_blank" rel="noopener">Suggest it with a tweet URL</a>.
-      </div>
     </main>
 
     <footer class="site-footer">
@@ -196,6 +198,9 @@ const introStats = [
       const sort = document.getElementById("sort") as HTMLSelectElement;
       const theme = document.getElementById("theme") as HTMLButtonElement;
       const chips = [...document.querySelectorAll<HTMLButtonElement>(".chip")];
+      const chipRail = document.querySelector<HTMLElement>(".chip-rail")!;
+      const chipRailWrap = document.querySelector<HTMLElement>(".chip-rail-wrap")!;
+      const siteHeader = document.querySelector<HTMLElement>(".site-header")!;
       const grid = document.getElementById("grid")!;
       const cards = [...document.querySelectorAll<HTMLElement>(".card")];
       const empty = document.getElementById("empty")!;
@@ -285,6 +290,22 @@ const introStats = [
         }
       }
 
+      function revealActiveChip() {
+        const activeChip = chips.find((chip) => (chip.dataset.area ?? "") === activeArea);
+        activeChip?.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
+      }
+
+      function syncChipOverflow() {
+        const atEnd = chipRail.scrollLeft + chipRail.clientWidth >= chipRail.scrollWidth - 2;
+        chipRailWrap.dataset.atEnd = String(atEnd);
+      }
+
+      function syncCompactHeader() {
+        const hasTextQuery = input.value.trim().length > 0;
+        document.body.classList.toggle("has-text-query", hasTextQuery);
+        siteHeader.classList.toggle("is-compact", hasTextQuery || window.scrollY > 120);
+      }
+
       function syncUrl() {
         const next = new URLSearchParams();
         const q = input.value.trim();
@@ -331,7 +352,9 @@ const introStats = [
       function renderBrowseState(visible: number, query: string) {
         resultCount.textContent = `Showing ${visible} ${visible === 1 ? "cafe" : "cafes"}`;
         empty.hidden = visible !== 0 || cards.length === 0;
+        grid.hidden = visible === 0;
         clearFilters.hidden = !query && !activeArea && sort.value === "newest";
+        syncCompactHeader();
       }
 
       function apply() {
@@ -361,12 +384,19 @@ const introStats = [
           activeArea = chip.dataset.area ?? "";
           syncChips();
           apply();
+          revealActiveChip();
         });
       }
+
+      chipRail.addEventListener("scroll", syncChipOverflow, { passive: true });
+      window.addEventListener("resize", syncChipOverflow);
+      window.addEventListener("scroll", syncCompactHeader, { passive: true });
 
       syncChips();
       sortCards();
       apply();
+      revealActiveChip();
+      requestAnimationFrame(syncChipOverflow);
     </script>
     <!-- 100% privacy-first analytics -->
     <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
