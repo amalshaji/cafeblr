@@ -220,7 +220,7 @@
     "source": "https://x.com/18RawatG/status/2072953872826675361",
     "postedAt": "2026-07-03T08:01:31.000Z",
     "author": "@18RawatG",
-    "likes": 765,
+    "likes": 764,
     "addedAt": "2026-07-06",
     "googleRating": 4.5
   },
@@ -250,7 +250,7 @@
     "source": "https://x.com/probablyaayushi/status/2066852023375663402",
     "postedAt": "2026-06-16T11:54:57.000Z",
     "author": "@probablyaayushi",
-    "likes": 773,
+    "likes": 774,
     "addedAt": "2026-07-06",
     "googleRating": 4.6
   },
@@ -280,7 +280,7 @@
     "source": "https://x.com/benedictgershom/status/1976328667329593639",
     "postedAt": "2025-10-09T16:47:27.000Z",
     "author": "@benedictgershom",
-    "likes": 1424,
+    "likes": 1422,
     "addedAt": "2026-07-06",
     "googleRating": 4.7
   },
@@ -325,7 +325,7 @@
     "source": "https://x.com/rashidhamalik/status/2068910507034308931",
     "postedAt": "2026-06-22T04:14:38.000Z",
     "author": "@rashidhamalik",
-    "likes": 93,
+    "likes": 92,
     "addedAt": "2026-07-06",
     "googleRating": 4.3
   },
@@ -355,7 +355,7 @@
     "source": "https://x.com/sidsimharaju/status/2021202701397405999",
     "postedAt": "2026-02-10T12:40:50.000Z",
     "author": "@sidsimharaju",
-    "likes": 1029,
+    "likes": 1027,
     "addedAt": "2026-07-06",
     "googleRating": 4.7
   },
@@ -400,7 +400,7 @@
     "source": "https://x.com/sidsimharaju/status/2063187593416859989",
     "postedAt": "2026-06-06T09:13:49.000Z",
     "author": "@sidsimharaju",
-    "likes": 67,
+    "likes": 66,
     "addedAt": "2026-07-06",
     "googleRating": 5
   },
@@ -415,7 +415,7 @@
     "source": "https://x.com/tanvigaikwad_9/status/1998028575619035453",
     "postedAt": "2025-12-08T13:55:08.000Z",
     "author": "@tanvigaikwad_9",
-    "likes": 263,
+    "likes": 262,
     "addedAt": "2026-07-06",
     "googleRating": 4.6
   },
@@ -460,7 +460,7 @@
     "source": "https://x.com/chandrarsrikant/status/2066779377665511897",
     "postedAt": "2026-06-16T07:06:17.000Z",
     "author": "@chandrarsrikant",
-    "likes": 291,
+    "likes": 290,
     "addedAt": "2026-07-06",
     "googleRating": 4.5
   },
@@ -505,7 +505,7 @@
     "source": "https://x.com/niketrajdwivedi/status/2071486734609928287",
     "postedAt": "2026-06-29T06:51:38.000Z",
     "author": "@niketrajdwivedi",
-    "likes": 54,
+    "likes": 56,
     "addedAt": "2026-07-06",
     "googleRating": 4.1
   },
@@ -565,7 +565,7 @@
     "source": "https://x.com/annunjaya/status/2045413612332978338",
     "postedAt": "2026-04-18T08:06:21.000Z",
     "author": "@annunjaya",
-    "likes": 599,
+    "likes": 600,
     "addedAt": "2026-07-08",
     "googleRating": 4.6
   },
@@ -625,7 +625,7 @@
     "source": "https://x.com/annunjaya/status/2046467676319678649",
     "postedAt": "2026-04-21T05:54:50.000Z",
     "author": "@annunjaya",
-    "likes": 216,
+    "likes": 217,
     "addedAt": "2026-07-08",
     "googleRating": 4.3
   },
@@ -640,7 +640,7 @@
     "source": "https://x.com/annunjaya/status/2046487371970118032",
     "postedAt": "2026-04-21T07:13:06.000Z",
     "author": "@annunjaya",
-    "likes": 242,
+    "likes": 241,
     "addedAt": "2026-07-08",
     "googleRating": 4.3
   },
@@ -670,7 +670,7 @@
     "source": "https://x.com/theoldmnk/status/1865682859538939944",
     "postedAt": "2024-12-08T09:00:31.000Z",
     "author": "@theoldmnk",
-    "likes": 865,
+    "likes": 864,
     "addedAt": "2026-07-08",
     "googleRating": 4.8
   },
@@ -745,7 +745,7 @@
     "source": "https://x.com/sidsimharaju/status/2049465454331396134",
     "postedAt": "2026-04-29T12:26:56.000Z",
     "author": "@sidsimharaju",
-    "likes": 435,
+    "likes": 434,
     "addedAt": "2026-07-08",
     "googleRating": 4.2
   },
@@ -777,7 +777,7 @@
     "author": "@ShadowOf_Gotham",
     "likes": 343,
     "addedAt": "2026-07-09",
-    "googleRating": 4.7
+    "googleRating": 4.6
   },
   {
     "id": 53,
@@ -868,5 +868,20 @@
     "likes": 286,
     "addedAt": "2026-07-13",
     "googleRating": 4.6
+  },
+  {
+    "id": 59,
+    "name": "Paris Panini",
+    "area": "Indiranagar",
+    "knownFor": "Paris panini and tiny sushi",
+    "image": "https://pbs.twimg.com/media/HNgjUP2a0AA0tmo.jpg",
+    "video": null,
+    "mapsUrl": "https://maps.app.goo.gl/mcAWNyabA7fqNB5p6",
+    "source": "https://x.com/cneuralnetwork/status/2078450100091891896",
+    "postedAt": "2026-07-18T12:01:34.000Z",
+    "author": "@cneuralnetwork",
+    "likes": 139,
+    "addedAt": "2026-07-19",
+    "googleRating": 4.4
   }
 ]
