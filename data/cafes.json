@@ -883,5 +883,35 @@
     "likes": 142,
     "addedAt": "2026-07-19",
     "googleRating": 4.4
+  },
+  {
+    "id": 60,
+    "name": "Izanagi Japanese Restaurant",
+    "area": "Indiranagar",
+    "knownFor": "Food and staff both rated 8/10 by the author",
+    "image": "https://pbs.twimg.com/media/HN-n7yzbIAAJwZl.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Izanagi+100ft+Road+Indiranagar+Bengaluru",
+    "source": "https://x.com/niketrajdwivedi/status/2080566229216133544",
+    "postedAt": "2026-07-24T08:10:18.000Z",
+    "author": "@niketrajdwivedi",
+    "likes": 50,
+    "addedAt": "2026-07-24",
+    "googleRating": 4.5
+  },
+  {
+    "id": 61,
+    "name": "Lick | Lavonne Ice Cream Kitchen",
+    "area": "Indiranagar",
+    "knownFor": "Taste, staff and ambience all rated 8/10 by the author",
+    "image": "https://pbs.twimg.com/media/HNvXADtbwAAgS1i.jpg",
+    "video": null,
+    "mapsUrl": "https://www.google.com/maps/place/LICK+%7C+Lavonne+Ice+Cream+Kitchen/@12.9676898,77.6367944,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae150003f23731:0xe49cda73e1448c4b!8m2!3d12.9676898!4d77.6367944!16s%2Fg%2F11x2p7xxf6?entry=ttu&g_ep=EgoyMDI2MDcyMS4wIKXMDSoASAFQAw%3D%3D",
+    "source": "https://x.com/niketrajdwivedi/status/2079492058352591244",
+    "postedAt": "2026-07-21T09:01:56.000Z",
+    "author": "@niketrajdwivedi",
+    "likes": 40,
+    "addedAt": "2026-07-24",
+    "googleRating": 4
   }
 ]
