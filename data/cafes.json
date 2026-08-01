@@ -973,5 +973,35 @@
     "author": "@niketrajdwivedi",
     "likes": 26,
     "addedAt": "2026-07-28"
+  },
+  {
+    "id": 66,
+    "name": "Yaghma Kababs",
+    "area": "HRBR & HSR",
+    "knownFor": "Delhi-style malai tikka and kebabs the author calls the best they've had",
+    "image": "https://pbs.twimg.com/media/HOnSxNea8AA8TEb.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/thepanshi_/status/2083428051531223113",
+    "postedAt": "2026-08-01T05:42:10.000Z",
+    "author": "@thepanshi_",
+    "likes": 301,
+    "addedAt": "2026-08-01",
+    "googleRating": null
+  },
+  {
+    "id": 67,
+    "name": "Roxie",
+    "area": "HSR Layout",
+    "knownFor": "Mango sticky rice drink, reverse baked vada pav and beiruti-style spiced potatoes",
+    "image": "https://pbs.twimg.com/media/HOoINwTa4AAHf2E.jpg",
+    "video": null,
+    "mapsUrl": null,
+    "source": "https://x.com/taasshiii/status/2083486830297837650",
+    "postedAt": "2026-08-01T09:35:44.000Z",
+    "author": "@taasshiii",
+    "likes": 241,
+    "addedAt": "2026-08-01",
+    "googleRating": null
   }
 ]
