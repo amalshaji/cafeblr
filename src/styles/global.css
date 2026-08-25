@@ -655,6 +655,33 @@ body.view-map .view-thumb {
   text-decoration: underline;
 }
 
+/* "use two fingers" overlay, shown on single-finger drag attempts on touch */
+.map-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 800;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: var(--shadow-focus);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.map-hint.is-visible {
+  opacity: 1;
+}
+
+.map-hint span {
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--media-pill-bg);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  box-shadow: 0 2px 12px var(--media-pill-shadow);
+}
+
 .map-canvas .leaflet-bar {
   border: 1px solid var(--line);
   border-radius: 10px;

@@ -99,6 +99,30 @@ async function init(container: HTMLElement, cafes: MapCafe[]): Promise<void> {
   map.setView([12.9629, 77.5937], 12);
   map.attributionControl.setPrefix(false);
 
+  // cooperative gestures on touch: one finger scrolls the page (dragging off
+  // switches Leaflet's touch-action to pan-x pan-y), two fingers pan/zoom the map
+  if (window.matchMedia("(pointer: coarse)").matches) {
+    map.dragging.disable();
+    const hint = document.createElement("div");
+    hint.className = "map-hint";
+    hint.innerHTML = "<span>Use two fingers to move the map</span>";
+    container.append(hint);
+    let hideTimer: number | undefined;
+    container.addEventListener(
+      "touchmove",
+      (event) => {
+        if (event.touches.length === 1) {
+          hint.classList.add("is-visible");
+          window.clearTimeout(hideTimer);
+          hideTimer = window.setTimeout(() => hint.classList.remove("is-visible"), 900);
+        } else {
+          hint.classList.remove("is-visible");
+        }
+      },
+      { passive: true },
+    );
+  }
+
   // Custom-styled vector basemap (see map-style.ts); CARTO raster as fallback
   // if WebGL or the GL bundle is unavailable.
   try {
