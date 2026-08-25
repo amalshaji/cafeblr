@@ -74,11 +74,9 @@ async function loadLeaflet(): Promise<void> {
   const mod: any = await import("leaflet");
   L = (mod.default ?? mod) as Leaflet;
   (window as any).L = L; // leaflet.markercluster augments the shared instance
-  await Promise.all([
-    import("leaflet/dist/leaflet.css"),
-    import("leaflet.markercluster/dist/MarkerCluster.css"),
-    import("leaflet.markercluster"),
-  ]);
+  // MarkerCluster.css is NOT imported: Vite drops the emitted file while keeping
+  // its preload reference (runtime 404). Its few animation rules live in global.css.
+  await Promise.all([import("leaflet/dist/leaflet.css"), import("leaflet.markercluster")]);
 }
 
 async function init(container: HTMLElement, cafes: MapCafe[]): Promise<void> {
@@ -103,6 +101,13 @@ async function init(container: HTMLElement, cafes: MapCafe[]): Promise<void> {
   // switches Leaflet's touch-action to pan-x pan-y), two fingers pan/zoom the map
   if (window.matchMedia("(pointer: coarse)").matches) {
     map.dragging.disable();
+    // touch-action pan-x pan-y (set by Leaflet once dragging is off) lets the
+    // browser own one-finger pans; claim two-finger gestures back for the map
+    const claimMultiTouch = (event: TouchEvent) => {
+      if (event.touches.length >= 2) event.preventDefault();
+    };
+    container.addEventListener("touchstart", claimMultiTouch, { passive: false });
+    container.addEventListener("touchmove", claimMultiTouch, { passive: false });
     const hint = document.createElement("div");
     hint.className = "map-hint";
     hint.innerHTML = "<span>Use two fingers to move the map</span>";

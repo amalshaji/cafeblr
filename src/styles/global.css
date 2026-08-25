@@ -552,6 +552,16 @@ body.view-map .view-thumb {
   font-family: var(--font-body);
 }
 
+/* leaflet.markercluster animation rules (MarkerCluster.css inlined — see map.ts) */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}
+
 .cafe-dot span {
   display: block;
   width: 100%;
