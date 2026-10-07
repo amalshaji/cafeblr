@@ -15,7 +15,7 @@ BASE_REF=origin/main bun scripts/validate.ts   # + live-check entries changed vs
 bun scripts/validate.ts --live           # force live checks on every entry
 ```
 
-There are no tests or linters; CI (`.github/workflows/ci.yml`) runs `bun run validate` (with `BASE_REF` on PRs) and `bun run build`.
+Browser regression tests live in `tests/` (`bun run test:ui`, Playwright — stop the background dev server first, it conflicts with the test web server). There are no linters; CI (`.github/workflows/ci.yml`) runs `bun run validate` (with `BASE_REF` on PRs) and `bun run build`.
 
 When starting the dev server, use background mode:
 
@@ -27,9 +27,11 @@ Manage the background server with `astro dev stop`, `astro dev status`, and `ast
 
 ## Architecture
 
-Everything renders from one data file: `data/cafes.json`.
+Everything renders from one data file: `data/cafes.json` (plus `data/geo.json`, cafe id → `{lat, lng}`, for the map view).
 
-- `src/pages/index.astro` — the only page. Parses `data/cafes.json` with the zod schema at build time, sorts newest by source post `postedAt`, renders `CafeCard` per entry, and includes a small inline `<script>` for client-side search + area-chip filtering (no framework components). Cards carry `data-search`/`data-area` attributes the script filters on.
+- `src/pages/index.astro` — the only page. Parses `data/cafes.json` with the zod schema at build time, sorts newest by source post `postedAt`, renders `CafeCard` per entry, and includes a small inline `<script>` for client-side search + area-chip filtering and a Grid/Map view toggle (no framework components). Cards carry `data-search`/`data-area` attributes the script filters on.
+- `src/scripts/map.ts` — the Map view: Leaflet + markercluster, dynamically imported on first open so the grid view stays light. Basemap is a custom-styled vector map (`src/scripts/map-style.ts`, one palette per theme, swapped live on theme change) rendered by maplibre-gl via `@maplibre/maplibre-gl-leaflet`, tiles + glyphs from OpenFreeMap (no API key); CARTO raster tiles are the fallback if WebGL is unavailable. Markers filter in sync with search/area chips. Note: MapLibre defers style/tile work to `requestAnimationFrame`, so the basemap stays blank in hidden/occluded tabs (e.g. browser automation) — shim rAF with setTimeout to screenshot it.
+- `scripts/geocode.ts` — builds `data/geo.json` from each entry's `mapsUrl` (Nominatim fallback). Only fetches ids missing from geo.json, so rerun after adding cafes; a cafe without coordinates simply doesn't appear on the map. Google's opaque `data=!4m2…` place URLs can't be resolved without a browser — for those, open the URL and read the resolved `@lat,lng` from the address bar.
 - `src/lib/schema.ts` — zod schema for a cafe entry (strict, all fields required; `source` must be an `x.com/<user>/status/<id>` URL and `postedAt` is the source tweet timestamp) plus `directionsUrl()`: explicit `mapsUrl` wins, otherwise a Google Maps search of name + area.
 - `scripts/validate.ts` — validation CLI. Always checks: JSON parses, schema, ids increment 1,2,3,… in file order, source tweet URLs unique. Live checks (tweet still exists via Twitter's syndication API, image/video URLs load) run only for entries new/changed relative to `$BASE_REF`, so dead tweets in old entries never break the build.
 - `scripts/lib/tweet.ts` — adapter for Twitter's unofficial syndication API (`cdn.syndication.twimg.com`, same endpoint react-tweet uses). Isolated so it can be swapped for FxTwitter if it breaks. Use `fetchTweet(id)` to get tweet text, likes, author, and media URLs when building a new entry.

@@ -74,11 +74,23 @@ BASE_REF=origin/main bun scripts/validate.ts   # live-checks the new entry
 
 Both must pass before pushing.
 
+Then geocode the new entry for the homepage map (fetches only ids missing from
+`data/geo.json`):
+
+```sh
+bun scripts/geocode.ts
+```
+
+If it can't resolve the entry (opaque Google Maps `data=!4m2…` URLs need a browser),
+open the `mapsUrl` in the browser and copy the `@lat,lng` from the resolved address bar
+into `data/geo.json` under the new id. A cafe missing from geo.json just won't appear
+on the map — don't block the PR on it; mention it in the PR body instead.
+
 ## 6. Raise the PR
 
 ```sh
 git checkout -b add-cafe-<kebab-name>
-git add data/cafes.json
+git add data/cafes.json data/geo.json
 git commit -m "data: add <Name> (<Area>)"
 git push -u origin add-cafe-<kebab-name>
 gh pr create --title "Add <Name> (<Area>)" --body "..."

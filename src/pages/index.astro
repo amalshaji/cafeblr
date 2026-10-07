@@ -3,7 +3,9 @@ import figtreeFontUrl from "@fontsource-variable/figtree/files/figtree-latin-wgh
 import frauncesFontUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
 import "@/src/styles/global.css";
 import CafeCard from "@/src/components/CafeCard.astro";
+import geoData from "@/data/geo.json";
 import { areasByPopularity, cafesByNewest } from "@/src/lib/cafes";
+import { directionsUrl } from "@/src/lib/schema";
 import { SEO, structuredDataJson } from "@/src/lib/seo";
 
 const GITHUB_URL = "https://github.com/amalshaji/cafeblr";
@@ -21,6 +23,22 @@ const introStats = [
   { value: areas.length.toLocaleString("en-IN"), label: "areas" },
   { value: compactNumber.format(cafes.reduce((total, cafe) => total + cafe.likes, 0)), label: "X likes" },
 ];
+
+const geo = geoData as Record<string, { lat: number; lng: number }>;
+const mapCafes = cafes
+  .filter((cafe) => geo[String(cafe.id)])
+  .map((cafe) => ({
+    id: cafe.id,
+    name: cafe.name,
+    area: cafe.area,
+    lat: geo[String(cafe.id)].lat,
+    lng: geo[String(cafe.id)].lng,
+    likes: cafe.likes,
+    rating: cafe.googleRating,
+    thumb: cafe.image.includes("?") ? cafe.image : `${cafe.image}?name=thumb`,
+    source: cafe.source,
+    directions: directionsUrl(cafe),
+  }));
 ---
 
 <html lang="en">
@@ -159,6 +177,25 @@ const introStats = [
         </div>
         <div class="browse-meta">
           <div class="sort-tools">
+            <div class="view-toggle" role="group" aria-label="View as">
+              <span class="view-thumb" aria-hidden="true"></span>
+              <button class="view-btn" id="view-grid" type="button" aria-pressed="true">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <rect x="1" y="1" width="5" height="5" rx="1.2"></rect>
+                  <rect x="8" y="1" width="5" height="5" rx="1.2"></rect>
+                  <rect x="1" y="8" width="5" height="5" rx="1.2"></rect>
+                  <rect x="8" y="8" width="5" height="5" rx="1.2"></rect>
+                </svg>
+                Grid
+              </button>
+              <button class="view-btn" id="view-map" type="button" aria-pressed="false">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 3.4 5 1.8l4 1.6 4-1.6v8.8l-4 1.6-4-1.6-4 1.6Z"></path>
+                  <path d="M5 1.8v8.8M9 3.4v8.8"></path>
+                </svg>
+                Map
+              </button>
+            </div>
             <label>
               Sort
               <select id="sort" aria-label="Sort cafes" aria-controls="grid">
@@ -181,7 +218,13 @@ const introStats = [
         {cafes.map((cafe, i) => <CafeCard cafe={cafe} index={i} />)}
       </section>
 
+      <section class="map-panel" id="map-panel" aria-label="Map of cafes" hidden>
+        <div class="map-canvas" id="map"></div>
+      </section>
+
     </main>
+
+    <script type="application/json" id="map-data" set:html={JSON.stringify(mapCafes)}></script>
 
     <footer class="site-footer">
       <div class="wrap">
@@ -194,6 +237,8 @@ const introStats = [
     </footer>
 
     <script>
+      import { setMapVisibility, showMap, type MapCafe } from "@/src/scripts/map";
+
       const input = document.getElementById("search") as HTMLInputElement;
       const sort = document.getElementById("sort") as HTMLSelectElement;
       const theme = document.getElementById("theme") as HTMLButtonElement;
@@ -204,7 +249,13 @@ const introStats = [
       const empty = document.getElementById("empty")!;
       const resultCount = document.getElementById("result-count")!;
       const clearFilters = document.getElementById("clear-filters") as HTMLButtonElement;
+      const mapPanel = document.getElementById("map-panel")!;
+      const mapCanvas = document.getElementById("map")!;
+      const viewGrid = document.getElementById("view-grid") as HTMLButtonElement;
+      const viewMap = document.getElementById("view-map") as HTMLButtonElement;
+      const mapCafes: MapCafe[] = JSON.parse(document.getElementById("map-data")!.textContent!);
       let activeArea = "";
+      let activeView: "grid" | "map" = "grid";
 
       const THEME_KEY = "cafeblr-theme";
       const THEME_COLORS = { light: "#ffffff", dark: "#15110e" };
@@ -281,6 +332,7 @@ const introStats = [
       input.value = params.get("q") ?? "";
       activeArea = validAreas.has(areaParam) ? areaParam : "";
       sort.value = validSorts.has(sortParam) ? sortParam : "newest";
+      activeView = params.get("view") === "map" ? "map" : "grid";
 
       function syncChips() {
         for (const chip of chips) {
@@ -303,6 +355,7 @@ const introStats = [
         if (q) next.set("q", q);
         if (activeArea) next.set("area", activeArea);
         if (sort.value !== "newest") next.set("sort", sort.value);
+        if (activeView === "map") next.set("view", "map");
         const query = next.toString();
         history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
       }
@@ -343,17 +396,45 @@ const introStats = [
       function renderBrowseState(visible: number, query: string) {
         resultCount.textContent = `Showing ${visible} ${visible === 1 ? "cafe" : "cafes"}`;
         empty.hidden = visible !== 0 || cards.length === 0;
-        grid.hidden = visible === 0;
+        grid.hidden = visible === 0 || activeView === "map";
+        mapPanel.hidden = activeView !== "map" || visible === 0;
         clearFilters.hidden = !query && !activeArea && sort.value === "newest";
         document.body.classList.toggle("has-text-query", Boolean(query));
+      }
+
+      function syncMapMarkers() {
+        const ids = new Set<number>();
+        for (const card of cards) {
+          if (!card.hidden) ids.add(Number(card.dataset.id));
+        }
+        setMapVisibility(ids);
       }
 
       function apply() {
         const query = input.value.trim().toLowerCase();
         const visible = renderCards(query);
         renderBrowseState(visible, query);
+        syncMapMarkers();
         syncUrl();
       }
+
+      function setView(view: "grid" | "map") {
+        activeView = view;
+        document.body.classList.toggle("view-map", view === "map");
+        viewGrid.setAttribute("aria-pressed", String(view === "grid"));
+        viewMap.setAttribute("aria-pressed", String(view === "map"));
+        apply();
+        if (view === "map") {
+          showMap(mapCanvas, mapCafes).catch((error) => {
+            console.error("map failed to load", error);
+            mapPanel.hidden = true;
+            setView("grid");
+          });
+        }
+      }
+
+      viewGrid.addEventListener("click", () => setView("grid"));
+      viewMap.addEventListener("click", () => setView("map"));
 
       input.addEventListener("input", apply);
       sort.addEventListener("change", () => {
@@ -383,9 +464,10 @@ const introStats = [
 
       syncChips();
       sortCards();
-      apply();
+      setView(activeView);
       revealActiveChip();
       syncScrolledHeader();
+      document.body.dataset.ready = "";
     </script>
     <!-- 100% privacy-first analytics -->
     <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>

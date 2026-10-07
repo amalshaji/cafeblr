@@ -171,6 +171,39 @@ test("desktop header retains its original height", async ({ page, isMobile }) =>
   expect(height).toBeLessThanOrEqual(69);
 });
 
+test("map view toggles, filters markers with the area chips, and persists in the URL", async ({ page }) => {
+  await expect(page.locator("body[data-ready]")).toBeAttached();
+  await page.getByRole("button", { name: "Map" }).click();
+  await expect(page.locator("#grid")).toBeHidden();
+  await expect(page.locator("#map-panel")).toBeVisible();
+  await expect(page.locator(".leaflet-container")).toBeVisible();
+  await expect.poll(() => page.locator(".cafe-dot, .cafe-cluster").count()).toBeGreaterThan(0);
+  expect(new URL(page.url()).searchParams.get("view")).toBe("map");
+
+  const areaChip = page.locator('.chip[data-area]:not([data-area=""])').first();
+  const expectedCount = Number(await areaChip.locator(".n").textContent());
+  await areaChip.click();
+  await expect
+    .poll(async () => {
+      const clusterCounts = await page.locator(".cafe-cluster span").allTextContents();
+      const dots = await page.locator(".cafe-dot").count();
+      return clusterCounts.reduce((total, count) => total + Number(count), 0) + dots;
+    })
+    .toBe(expectedCount);
+
+  await page.getByRole("button", { name: "Grid" }).click();
+  await expect(page.locator("#grid")).toBeVisible();
+  await expect(page.locator("#map-panel")).toBeHidden();
+  expect(new URL(page.url()).searchParams.get("view")).toBeNull();
+});
+
+test("map view opens directly from the URL", async ({ page }) => {
+  await page.goto("/?view=map", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("#grid")).toBeHidden();
+  await expect(page.locator(".leaflet-container")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Map" })).toHaveAttribute("aria-pressed", "true");
+});
+
 test("a URL-selected mobile area is revealed without moving the page", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Mobile horizontal behavior only");
   const areaChip = page.locator('.chip[data-area]:not([data-area=""])').last();
