@@ -83,7 +83,8 @@ test("cards keep source provenance accessible without an extra author row", asyn
 
   const directionsBox = await cards.first().getByRole("link", { name: /^Directions to/ }).boundingBox();
   expect(directionsBox).not.toBeNull();
-  expect(directionsBox!.height).toBeGreaterThanOrEqual(44);
+  // Chromium can report a 44px target slightly below 44 due to subpixel rounding.
+  expect(directionsBox!.height).toBeGreaterThanOrEqual(44 - 0.01);
   const directions = cards.first().getByRole("link", { name: /^Directions to/ });
   await directions.focus();
   await expect(directions).toBeFocused();
@@ -181,7 +182,9 @@ test("map view toggles, filters markers with the area chips, and persists in the
   expect(new URL(page.url()).searchParams.get("view")).toBe("map");
 
   const areaChip = page.locator('.chip[data-area]:not([data-area=""])').first();
-  const expectedCount = Number(await areaChip.locator(".n").textContent());
+  const area = await areaChip.getAttribute("data-area");
+  const mappedCafes: Array<{ area: string }> = JSON.parse((await page.locator("#map-data").textContent())!);
+  const expectedCount = mappedCafes.filter((cafe) => cafe.area === area).length;
   await areaChip.click();
   await expect
     .poll(async () => {
