@@ -202,6 +202,7 @@ const mapCafes = cafes
                 <option value="newest">Newest</option>
                 <option value="liked">Most liked</option>
                 {hasGoogleRatings && <option value="rated">Top rated</option>}
+                <option value="near">Near me</option>
               </select>
             </label>
             <button class="clear-filters" id="clear-filters" type="button" hidden>Clear filters</button>
@@ -256,6 +257,13 @@ const mapCafes = cafes
       const mapCafes: MapCafe[] = JSON.parse(document.getElementById("map-data")!.textContent!);
       let activeArea = "";
       let activeView: "grid" | "map" = "grid";
+      let previousSort = "newest";
+      let hasUserPosition = false;
+
+      // "Near me" needs the browser's location; drop the option where it can't work.
+      if (!("geolocation" in navigator) || !window.isSecureContext) {
+        sort.querySelector('option[value="near"]')?.remove();
+      }
 
       const THEME_KEY = "cafeblr-theme";
       const THEME_COLORS = { light: "#ffffff", dark: "#15110e" };
@@ -331,7 +339,9 @@ const mapCafes = cafes
 
       input.value = params.get("q") ?? "";
       activeArea = validAreas.has(areaParam) ? areaParam : "";
-      sort.value = validSorts.has(sortParam) ? sortParam : "newest";
+      // "near" is never restored from the URL: it would prompt for location on page load.
+      sort.value = validSorts.has(sortParam) && sortParam !== "near" ? sortParam : "newest";
+      previousSort = sort.value;
       activeView = params.get("view") === "map" ? "map" : "grid";
 
       function syncChips() {
@@ -354,7 +364,7 @@ const mapCafes = cafes
         const q = input.value.trim();
         if (q) next.set("q", q);
         if (activeArea) next.set("area", activeArea);
-        if (sort.value !== "newest") next.set("sort", sort.value);
+        if (sort.value !== "newest" && sort.value !== "near") next.set("sort", sort.value);
         if (activeView === "map") next.set("view", "map");
         const query = next.toString();
         history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
@@ -370,10 +380,57 @@ const mapCafes = cafes
               Number(b.dataset.googleRating) - Number(a.dataset.googleRating) ||
               Number(b.dataset.id) - Number(a.dataset.id),
           );
+        } else if (sort.value === "near") {
+          ordered.sort((a, b) => Number(a.dataset.distance ?? Infinity) - Number(b.dataset.distance ?? Infinity));
         } else {
           ordered.sort((a, b) => Number(a.dataset.newestRank) - Number(b.dataset.newestRank));
         }
         for (const card of ordered) grid.append(card);
+      }
+
+      // Straight-line distance in km (haversine).
+      function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+        const rad = Math.PI / 180;
+        const dLat = (lat2 - lat1) * rad;
+        const dLng = (lng2 - lng1) * rad;
+        const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) ** 2;
+        return 2 * 6371 * Math.asin(Math.sqrt(h));
+      }
+
+      function formatDistance(km: number): string {
+        if (km < 1) return `${Math.max(50, Math.round((km * 1000) / 50) * 50)} m away`;
+        return `${km < 10 ? km.toFixed(1) : Math.round(km)} km away`;
+      }
+
+      function setDistances(lat: number, lng: number) {
+        const coords = new Map(mapCafes.map((cafe) => [cafe.id, cafe]));
+        for (const card of cards) {
+          const cafe = coords.get(Number(card.dataset.id));
+          const label = card.querySelector<HTMLElement>(".card-distance");
+          if (!cafe || !label) continue;
+          const km = distanceKm(lat, lng, cafe.lat, cafe.lng);
+          card.dataset.distance = String(km);
+          label.textContent = formatDistance(km);
+          label.hidden = false;
+        }
+      }
+
+      function locateUser(): Promise<boolean> {
+        resultCount.textContent = "Finding your location…";
+        sort.disabled = true;
+        return new Promise<boolean>((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setDistances(position.coords.latitude, position.coords.longitude);
+              hasUserPosition = true;
+              resolve(true);
+            },
+            () => resolve(false),
+            { timeout: 10000, maximumAge: 5 * 60 * 1000 },
+          );
+        }).finally(() => {
+          sort.disabled = false;
+        });
       }
 
       function cardMatches(card: HTMLElement, query: string): boolean {
@@ -437,7 +494,14 @@ const mapCafes = cafes
       viewMap.addEventListener("click", () => setView("map"));
 
       input.addEventListener("input", apply);
-      sort.addEventListener("change", () => {
+      sort.addEventListener("change", async () => {
+        if (sort.value === "near" && !hasUserPosition && !(await locateUser())) {
+          sort.value = previousSort;
+          apply();
+          resultCount.textContent = "Couldn't get your location. Check location access and try again.";
+          return;
+        }
+        previousSort = sort.value;
         sortCards();
         apply();
       });
@@ -445,6 +509,7 @@ const mapCafes = cafes
         input.value = "";
         activeArea = "";
         sort.value = "newest";
+        previousSort = "newest";
         syncChips();
         sortCards();
         apply();

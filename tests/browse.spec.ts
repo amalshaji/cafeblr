@@ -228,3 +228,38 @@ test("a URL-selected mobile area is revealed without moving the page", async ({ 
   expect(selected!.x).toBeGreaterThanOrEqual(0);
   expect(selected!.x + selected!.width).toBeLessThanOrEqual(viewport.width);
 });
+
+test("near me sorts by distance from the browser location without persisting it", async ({ page, context }) => {
+  const mappedCafes: Array<{ id: number; lat: number; lng: number }> = JSON.parse(
+    (await page.locator("#map-data").textContent())!,
+  );
+  const target = mappedCafes[Math.floor(mappedCafes.length / 2)];
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: target.lat, longitude: target.lng });
+
+  await page.getByRole("combobox", { name: "Sort cafes" }).selectOption("near");
+
+  const firstCard = page.locator(".card:visible").first();
+  await expect(firstCard.locator(".card-distance")).toHaveText(/^\d+ m away$/);
+  const distances = await page.locator(".card:visible").evaluateAll((cards) =>
+    cards.map((card) => Number((card as HTMLElement).dataset.distance)),
+  );
+  expect(distances[0]).toBeLessThan(0.001);
+  expect(distances).toEqual([...distances].sort((a, b) => a - b));
+  expect(new URL(page.url()).searchParams.get("sort")).toBeNull();
+});
+
+test("near me falls back to the previous sort when location is unavailable", async ({ page, context }) => {
+  await context.clearPermissions();
+  const sort = page.getByRole("combobox", { name: "Sort cafes" });
+  await sort.selectOption("near");
+
+  await expect(page.getByText("Couldn't get your location. Check location access and try again.")).toBeVisible();
+  await expect(sort).toHaveValue("newest");
+  await expect(page.locator(".card-distance:visible")).toHaveCount(0);
+});
+
+test("a sort=near URL does not prompt for location on load", async ({ page }) => {
+  await page.goto("/?sort=near", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("combobox", { name: "Sort cafes" })).toHaveValue("newest");
+});

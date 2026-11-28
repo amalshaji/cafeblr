@@ -475,6 +475,96 @@ button {
   min-width: 124px;
 }
 
+/* customizable select (Chromium); other browsers keep the native menu above */
+@supports (appearance: base-select) {
+  .sort-tools select,
+  .sort-tools select::picker(select) {
+    appearance: base-select;
+  }
+
+  .sort-tools select {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 8px 14px;
+    background-image: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .sort-tools select:hover,
+  .sort-tools select:open {
+    border-color: var(--line-strong);
+  }
+
+  .sort-tools select:open {
+    box-shadow: 0 3px 12px var(--shadow-focus);
+  }
+
+  .sort-tools select::picker-icon {
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin-left: auto;
+    background: var(--select-arrow) center / 12px no-repeat;
+    transition: rotate 0.2s ease;
+  }
+
+  .sort-tools select:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  .sort-tools select::picker(select) {
+    margin-top: 6px;
+    padding: 5px;
+    min-width: anchor-size(width);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--canvas);
+    color: var(--ink);
+    box-shadow: 0 10px 30px var(--shadow-focus);
+    opacity: 1;
+    translate: 0 0;
+    transition: opacity 0.15s ease, translate 0.15s ease, overlay 0.15s allow-discrete, display 0.15s allow-discrete;
+  }
+
+  @starting-style {
+    .sort-tools select:open::picker(select) {
+      opacity: 0;
+      translate: 0 -4px;
+    }
+  }
+
+  .sort-tools option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .sort-tools option:hover,
+  .sort-tools option:focus-visible {
+    background: var(--wash);
+    outline: none;
+  }
+
+  .sort-tools option:checked {
+    color: var(--accent);
+  }
+
+  .sort-tools option::checkmark {
+    order: 1;
+    margin-left: auto;
+    content: "✓";
+    font-weight: 750;
+  }
+}
+
 .clear-filters {
   font-size: 13.5px;
   font-weight: 700;
@@ -889,6 +979,11 @@ body.view-map .view-thumb {
   color: var(--muted);
 }
 
+.card-distance {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
 .card-actions .directions-link {
   display: inline-flex;
   align-items: center;
@@ -1091,6 +1186,8 @@ body.view-map .view-thumb {
 
 @media (prefers-reduced-motion: reduce) {
   .view-thumb,
+  .sort-tools select::picker-icon,
+  .sort-tools select::picker(select),
   .cafe-dot span,
   .cafe-cluster span {
     transition: none;
